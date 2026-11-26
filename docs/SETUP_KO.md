@@ -44,7 +44,7 @@ export HF_TOKEN='YOUR_HUGGINGFACE_TOKEN'
 3. 공식 Google Drive의 MM-SafetyBench 이미지 ZIP 다운로드·SHA-256 검증·압축 해제
 4. 고정 Hugging Face revision의 MemJack 궤적 다운로드 및 파일별 SHA-256 검증
 5. MemJack train 경험 은행 45,016건 재생성
-6. Qwen2.5-VL-32B와 공통 SDXL 이미지 생성기 다운로드
+6. Qwen2.5-VL-32B 보조 모델, Qwen2.5-VL-7B 공통 타겟, 공통 SDXL 이미지 생성기 다운로드
 7. 단위 테스트와 `doctor --strict` 실행
 
 원형 충실도용 모델과 legacy 환경까지 준비:

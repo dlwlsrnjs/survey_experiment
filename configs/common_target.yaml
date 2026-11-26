@@ -1,0 +1,19 @@
+protocol_version: 1.0
+profile: controlled_common_target_v1
+model:
+  id: Qwen/Qwen2.5-VL-7B-Instruct
+  revision: cc594898137f460bfe9f0759e9844b3ce807cfb5
+  role: target_vlm
+  dtype: bfloat16
+inference:
+  do_sample: false
+  temperature: 0.0
+  max_new_tokens: 1024
+  seed: 20261125
+image_input:
+  min_pixels: 200704
+  max_pixels: 1003520
+evaluation:
+  judge_is_separate_from_target: true
+  preserve_source_target_results: true
+  report_as: controlled_common_target

@@ -52,6 +52,12 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 
 공통 통제 실험에서는 다른 조건을 최대한 고정해야 “역할이나 보조 모델이 달라져서 생긴 차이”를 해석할 수 있다. 반대로 HADES와 HIMRD의 원래 생성기를 공통 SDXL로 바꾸면 공개 절차를 충실하게 따라갔다고 말하기 어렵다. 그래서 한 설정으로 타협하지 않고, 비교를 위한 설정과 원형을 따라가기 위한 설정을 별도로 유지한다.
 
+### 공통 타겟 VLM
+
+공통 통제 트랙의 표적은 `Qwen/Qwen2.5-VL-7B-Instruct` revision `cc594898137f460bfe9f0759e9844b3ce807cfb5`로 고정한다. FigStep·HADES·HIMRD·MemJack에서 만들어진 최종 이미지와 프롬프트를 같은 모델에 재생해 기법 간 표적 차이를 제거한다. 설정의 단일 기준은 `configs/common_target.yaml`이다.
+
+원 논문 타겟 결과는 그대로 보존하고 공통 타겟 결과와 섞지 않는다. 32B 모델은 보조 역할 기준선으로 유지하며, 공통 타겟과 판정 모델은 서로 다른 역할로 기록한다.
+
 ### 관련 문서
 
 연구의 배경과 설계, 재현 절차, 현재 진행 상황은 다음 문서에 나누어 정리되어 있다.
@@ -68,7 +74,7 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 ## 현재 상태
 
 - 외부 공개 코드 7개, MM-SafetyBench 이미지, MemJack 데이터와 경험 은행을 고정 revision/checksum으로 복원할 수 있다.
-- 기본 보조 모델은 `Qwen/Qwen2.5-VL-32B-Instruct`이고, 공통 이미지 생성기는 SDXL이다.
+- 기본 보조 모델은 `Qwen/Qwen2.5-VL-32B-Instruct`, 공통 타겟 VLM은 `Qwen/Qwen2.5-VL-7B-Instruct`, 공통 이미지 생성기는 SDXL이다.
 - 2026-11-26 07:28 UTC에 32B 역할 비교 2,100/2,100건이 완료됐다. Slurm exit code는 0이고 모든 레코드가 `error=null`이다.
 - HIMRD 원형 경로는 SD3 Medium, LLaVA-v1.6-Mistral-7B, HarmBench-Mistral-7B를 사용하는 1건 smoke와 200건 본 작업이 제출돼 있다.
 - HADES는 공식 공개 6단계 최적화 이미지 중 200개 고유 목표(1,200장)를 고정 manifest로 만들었고, 원 LLaVA-1.5-7B와 Beaver-Dam-7B 평가 작업을 제출했다.
@@ -95,7 +101,7 @@ export HF_HOME=/path/to/huggingface-cache
 ./bootstrap.sh --profile core
 ```
 
-`core`는 현재 통제 실험에 필요한 32B 보조 모델, SDXL 이미지 생성기, 데이터셋, 외부 저장소, Python 환경을 모두 준비한다. 원형 충실도 모델과 legacy 환경까지 받으려면 다음을 사용한다.
+`core`는 현재 통제 실험에 필요한 32B 보조 모델, 7B 공통 타겟 VLM, SDXL 이미지 생성기, 데이터셋, 외부 저장소, Python 환경을 모두 준비한다. 원형 충실도 모델과 legacy 환경까지 받으려면 다음을 사용한다.
 
 ```bash
 ./bootstrap.sh --profile full

@@ -25,6 +25,8 @@
 |---|---|
 | 보조 모델 | `Qwen/Qwen2.5-VL-32B-Instruct` |
 | 모델 revision | `7cfb30d71a1f4f49a57592323337a4a4727301da` |
+| 공통 타겟 VLM | `Qwen/Qwen2.5-VL-7B-Instruct` |
+| 공통 타겟 revision | `cc594898137f460bfe9f0759e9844b3ce807cfb5` |
 | 추론 서버 | 로컬 OpenAI-compatible API, 기본 `127.0.0.1:8000/v1` |
 | 온도 | `0.0` |
 | seed | `20261125` |
@@ -35,6 +37,8 @@
 | 공통 이미지 생성기 | SDXL base 1.0, revision `462165984030d82259a11f4367a4eed129e94a7b` |
 
 실행별 실제 모델·GPU·Slurm 정보와 config/manifest/검색 계획의 SHA-256은 `runs/<experiment_id>/provenance.json`에 기록한다.
+
+공통 타겟 설정은 `configs/common_target.yaml`을 단일 기준으로 사용한다. 원 논문 타겟 결과와 공통 타겟 재생 결과는 각각 `source_fidelity`와 `controlled_common_target`으로 구분한다. 32B 보조 모델 출력과 7B 타겟 응답을 같은 모델 호출로 취급하지 않으며, 성공 판정 모델도 별도로 기록한다.
 
 이 표는 현재 실행 중인 첫 로컬 기준선이며 최종 비교 모델 전체를 뜻하지 않는다. 최종 비교는 소형·중형·대형 로컬 공개 모델과 비용 효율형·최상위 폐쇄 API를 같은 역할 계약에 재생한다. 정확한 모델 ID와 revision/API snapshot은 실행 전에 별도로 동결한다.
 
