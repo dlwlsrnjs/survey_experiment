@@ -168,5 +168,6 @@ python3 -m survey_exp.annotation \
 - `survey_exp/himrd_end_to_end.py`와 `slurm/run_himrd_end_to_end_h200.sbatch`에 SD3 → LLaVA-v1.6-Mistral-7B → HarmBench → 조건부 prefix/suffix 반복 경로가 구현돼 있다.
 - 기존 장면 설명 200건은 직접 재사용한다. 기존 prefix/suffix는 실제 VLM 응답 전 결과이므로 첫 반복 후보로만 사용한다.
 - LLaVA와 `cais/HarmBench-Mistral-7b-val-cls` 가중치는 `$HOME/.cache/huggingface`에 완전하다.
-- SD3 Medium은 gated 접근이 승인되지 않아 HTTP 403이다. snapshot에 실제 가중치가 없으므로 아직 H200 smoke/full job을 제출하지 않았다.
-- Hugging Face 모델 페이지에서 `stabilityai/stable-diffusion-3-medium-diffusers` 접근을 승인받은 뒤 SD3를 고정 revision `ea42f8cef0f178587cf766dc8129abd379c90671`로 내려받고, 1건 smoke가 성공하면 200건 작업을 제출한다.
+- SD3 Medium gated 접근이 승인됐고 고정 revision `ea42f8cef0f178587cf766dc8129abd379c90671`의 38개 파일, 약 15GB 다운로드와 오프라인 해석 검증이 완료됐다.
+- H200 1건 smoke는 Slurm `59824`, smoke 성공 후 자동 시작할 200건 본 작업은 `59825`다. `59825`는 `afterok:59824` 의존성을 사용한다.
+- smoke 출력은 `runs/himrd_e2e_llava16_smoke1_20261126`, 본 출력은 `runs/himrd_e2e_llava16_200_20261126`이다.

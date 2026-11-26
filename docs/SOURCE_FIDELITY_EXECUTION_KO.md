@@ -66,4 +66,4 @@ Slurm `59810`은 HIMRD 원 SafeBench의 앞 200개 고유 목표를 대상으로
 6. 원 저장소의 HarmBench prompt와 HarmBench-Mistral-7B classifier로 판정
 7. 이해 실패는 prefix, 이해했지만 공격 실패한 사례는 suffix를 최대 5회 조건부 수정
 
-H200 제출 파일은 `slurm/run_himrd_end_to_end_h200.sbatch`다. 2026-11-26 점검에서 LLaVA와 HarmBench 가중치는 완전했지만, 현재 Hugging Face 계정은 gated 저장소 `stabilityai/stable-diffusion-3-medium-diffusers`에 HTTP 403을 반환했다. SD3 snapshot에는 LICENSE와 README만 있고 실제 가중치는 없다. 모델 페이지에서 접근 승인을 받은 다음 `bootstrap.sh --profile full` 또는 고정 revision 다운로드를 실행해야 한다. 이 접근 조건이 충족되기 전에는 실패가 확정된 H200 작업을 제출하지 않는다.
+H200 제출 파일은 `slurm/run_himrd_end_to_end_h200.sbatch`다. 2026-11-26 Hugging Face gated 접근 승인 후 SD3 고정 revision의 38개 파일, 약 15GB를 내려받았고 오프라인 snapshot 해석과 필수 구성요소 검사를 통과했다. 1건 smoke는 Slurm `59824`, smoke 성공 후 시작하는 200건 본 작업은 `59825`다. 본 작업은 `afterok:59824` 의존성을 사용하므로 smoke가 실패하면 자동으로 실행되지 않는다.
