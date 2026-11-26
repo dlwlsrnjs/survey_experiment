@@ -58,9 +58,10 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 
 1. [서베이 논문과 실험 설계의 연결](docs/SURVEY_TO_EXPERIMENT_KO.md): 왜 이 실험을 하는지와 무엇을 말할 수 있는지
 2. [모델급·역할별 수행능력 평가 설계](docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md): 모델군, 의도 노출 조건, 역할별 지표와 비용 계산
-3. [실험 설정 및 중간작업 분석 계획](docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md): 비교 조건, 통계와 완료 기준
-4. [새 머신 설치 및 실행](docs/SETUP_KO.md): 데이터와 모델을 포함한 재현 방법
-5. [현재 상태와 세션 인수인계](docs/SESSION_HANDOFF_KO.md): 진행 중 실행과 안전한 재개 방법
+3. [논문 실구현 우선 실행](docs/SOURCE_FIDELITY_EXECUTION_KO.md): 원 벤치마크·원 모델과 GPT 역할 치환 원칙, 현재 실행
+4. [실험 설정 및 중간작업 분석 계획](docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md): 비교 조건, 통계와 완료 기준
+5. [새 머신 설치 및 실행](docs/SETUP_KO.md): 데이터와 모델을 포함한 재현 방법
+6. [현재 상태와 세션 인수인계](docs/SESSION_HANDOFF_KO.md): 진행 중 실행과 안전한 재개 방법
 
 서베이 원문은 [진행 중 논문 PDF](서베이논문%28진행중%29.pdf), 실험의 출발안은 [보조 모델 작업 과정 실험안 PDF](VLM_Survey_Auxiliary_Model_Experiment_Plan_KO.pdf)에서 볼 수 있다. 상세 연결 문서에는 각 주장마다 PDF 페이지 근거를 적었다. 아직 완료되지 않은 실험 수치는 결과처럼 미리 쓰지 않는다.
 

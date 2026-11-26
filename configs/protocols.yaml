@@ -23,13 +23,14 @@ methods:
     preserved:
       - caption scoring is separate from target-response scoring
       - each refinement receives prompt, caption, score, and explanation history
-    adaptation: fixed 32B VLM can fill writer/caption/judge roles in separate calls; role identity is logged
+    adaptation: GPT-3.5/GPT-4 API roles may be replaced by a pinned GPT-4o mini snapshot; PixArt, LLaVA, and Beaver remain source models
   HIMRD:
     repository: third_party/HIMRD-jailbreak
     revision: 614c6f7fcf496b9ef79c1ce393ba8e0e748adcef
     preserved:
       - failed candidate collection is supplied to rewrite calls
       - understanding and compliance judgments remain separate
+    adaptation: GPT-4o-mini/GPT-4o/o1 API roles may use pinned GPT-4o mini; SD3, victim VLMs, and HarmBench remain source models
     blocked_until: target responses are supplied through --target-responses
   MM-Plan:
     repository: third_party/MM-Plan

@@ -1,0 +1,9 @@
+{
+  "created_at": "2026-11-26T04:56:53.909607+00:00",
+  "dataset": "HIMRD-SafeBench",
+  "rows": 350,
+  "goal_units": 350,
+  "sha256": "a92a1e44589621bd926cbd9ab17ed6796b6bb582da9ab65acc76c6c0d8af332f",
+  "source": "third_party/HIMRD-jailbreak/data/SafeBench/SafeBench.txt",
+  "category_source": "third_party/FigStep/data/question/safebench.csv"
+}

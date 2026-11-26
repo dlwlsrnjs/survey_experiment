@@ -6,10 +6,11 @@
 
 1. `docs/SURVEY_TO_EXPERIMENT_KO.md`
 2. `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`
-3. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
-4. `docs/SESSION_HANDOFF_KO.md`
-5. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
-6. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
+3. `docs/SOURCE_FIDELITY_EXECUTION_KO.md`
+4. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
+5. `docs/SESSION_HANDOFF_KO.md`
+6. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
+7. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
 
 운영 원칙:
 

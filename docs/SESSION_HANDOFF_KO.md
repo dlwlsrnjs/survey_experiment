@@ -1,6 +1,6 @@
 # 세션 인수인계: 현재 상태와 다음 작업
 
-마지막 점검: **2026-11-26 13:32 KST**
+마지막 점검: **2026-11-26 13:57 KST**
 
 이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구의 논문 연결은 `docs/SURVEY_TO_EXPERIMENT_KO.md`, 모델급·역할별 평가 기준은 `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`, 구체적인 실행 설계는 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
 
@@ -46,6 +46,7 @@ Slurm job `59571`은 2026-11-25 16:48 KST경 사용자 취소로 종료됐다. �
 
 - `59780 vlmaux32b-resume`: `FAILED`, exit code `127:0`. Slurm spool 디렉터리를 프로젝트 루트로 잘못 해석한 경로 오류였으며 원시 출력은 증가하지 않았다.
 - `59787 vlmaux32b-resume`: 경로 계산을 수정하고 명시적인 `PROJECT_ROOT`로 다시 제출한 작업이다. H200 노드에서 실행 중이며 32B 모델의 18개 checkpoint shard 로딩, `server_ready`, 첫 HTTP 200 응답을 확인했다. 원시 출력도 393건에서 397건으로 증가해 실제 재개가 검증됐다.
+- `59810 himrd-4omini-200`: HIMRD 공개 SafeBench 200개 고유 목표의 GPT 역할 600레코드를 `gpt-4o-mini-2024-07-18`로 실행한다. 13:57 KST 기준 RTX6000 노드에서 실행 중이었다. 세부 원칙과 파일럿 결과는 `docs/SOURCE_FIDELITY_EXECUTION_KO.md`에 있다.
 - `59726 vlmaux-envs`: `COMPLETED`. modern/legacy VLM 환경 구성이 끝났다.
 - `59725 vlmaux-models`: `FAILED`, exit code `2:0`. 여러 모델 파일의 다운로드 진행 기록은 남아 있지만 완료 검증은 통과하지 못한 상태로 취급한다. 로그와 `doctor` 결과를 확인하기 전에는 전체 모델 설치가 끝났다고 간주하지 않는다.
 
