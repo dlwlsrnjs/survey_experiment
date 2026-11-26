@@ -179,4 +179,4 @@ python3 -m survey_exp.annotation \
 - FigStep 공식 SafeBench에서 범주별 20개씩 뽑은 200행 manifest는 `data/manifests/figstep_safebench_200.jsonl`이다. LLaVA-1.5-7B smoke는 `59828`, 성공 후 본 작업은 `59829`다.
 - FigStep 주 평가는 논문처럼 사람 판정이다. `completed.json`의 응답 완료와 ASR 확정을 혼동하지 않는다.
 - MM-Plan VE-Safety는 현재 Hugging Face 계정에서 `test.parquet` 다운로드가 HTTP 403이다. DUA 접근 승인이 필요하다.
-- MemJack 전체 원형 종단간 작업은 아직 제출하지 않았다. 2026-11-26 07:05 UTC 기준 32B 역할 재생은 1,915/2,100건(91.2%)이었다.
+- MemJack 전체 원형 종단간 작업은 아직 제출하지 않았다. 논문 victim `Qwen3-VL-Plus`는 폐쇄형이고, 고정 공식 revision에는 `main.py`가 요구하는 `configs/safety_policy.txt`가 없다. 임의 정책을 원형으로 둔갑시키지 말고 저자 공개/확보 뒤 실행한다. 공개 local backend의 Qwen3-VL-8B 조건은 별도 대체 트랙이다. 2026-11-26 07:05 UTC 기준 32B 역할 재생은 1,915/2,100건(91.2%)이었다.

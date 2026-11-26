@@ -74,7 +74,7 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 - HADES는 공식 공개 6단계 최적화 이미지 중 200개 고유 목표(1,200장)를 고정 manifest로 만들었고, 원 LLaVA-1.5-7B와 Beaver-Dam-7B 평가 작업을 제출했다.
 - FigStep은 공식 SafeBench 이미지와 원 텍스트 prompt를 사용하는 200건 LLaVA-1.5-7B 작업을 제출했다. 논문처럼 사람 판정을 주 평가로 사용하므로 응답 생성 완료와 ASR 확정을 구분한다.
 - MM-Plan은 Qwen3-VL-4B base planner는 준비됐지만 VE-Safety DUA 승인을 기다리고 있으며, 공개 저장소에는 논문 학습 완료 checkpoint가 없다.
-- MemJack 원 역할 모델과 공개 궤적은 준비됐지만 현재 실행 중인 것은 32B 역할 재생이다. 원 멀티에이전트 종단간 실행은 별도 작업으로 남아 있다.
+- MemJack 원 역할 모델과 공개 궤적은 준비됐지만 현재 실행 중인 것은 32B 역할 재생이다. 논문 대상 `Qwen3-VL-Plus`는 폐쇄형 API이고, 공식 저장소 revision에는 실행에 필수인 `configs/safety_policy.txt`가 빠져 있어 원형 종단간 실행은 그대로 제출할 수 없다. 공개 코드가 지원하는 Qwen3-VL-8B 로컬 victim 대체 실험은 원 논문 재현과 분리한다.
 - 이미지 생성을 포함하는 신규 파일럿과 전체 실험은 별도 experiment ID와 config를 사용한다.
 - 사람평가와 전체 호출이 끝나지 않았으므로 현재 부분 결과를 최종 결론이나 모델 순위로 간주하지 않는다.
 
