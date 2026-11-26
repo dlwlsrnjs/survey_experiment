@@ -1,6 +1,6 @@
 # 세션 인수인계: 현재 상태와 다음 작업
 
-마지막 점검: **2026-11-26 12:00 KST**
+마지막 점검: **2026-11-26 13:24 KST**
 
 이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구의 논문 연결은 `docs/SURVEY_TO_EXPERIMENT_KO.md`, 모델급·역할별 평가 기준은 `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`, 구체적인 실행 설계는 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
 
@@ -42,9 +42,10 @@ Slurm job `59571`은 2026-11-25 16:48 KST경 사용자 취소로 종료됐다. �
 
 ### Slurm 및 별도 환경 작업
 
-2026-11-26 12:00 KST 기준 상태는 다음과 같다.
+2026-11-26 13:24 KST 기준 상태는 다음과 같다.
 
-- `59780 vlmaux32b-resume`: `PENDING (Priority)`. 기존 393건 이후의 32B 전체 실행 재개 작업이다.
+- `59780 vlmaux32b-resume`: `FAILED`, exit code `127:0`. Slurm spool 디렉터리를 프로젝트 루트로 잘못 해석한 경로 오류였으며 원시 출력은 증가하지 않았다.
+- `59787 vlmaux32b-resume`: 경로 계산을 수정하고 명시적인 `PROJECT_ROOT`로 다시 제출한 작업이다. H200 노드에서 실행 중이며 13:24 KST에는 32B 모델 checkpoint를 로딩하고 있었다. 출력은 아직 393건이었다.
 - `59726 vlmaux-envs`: `COMPLETED`. modern/legacy VLM 환경 구성이 끝났다.
 - `59725 vlmaux-models`: `FAILED`, exit code `2:0`. 여러 모델 파일의 다운로드 진행 기록은 남아 있지만 완료 검증은 통과하지 못한 상태로 취급한다. 로그와 `doctor` 결과를 확인하기 전에는 전체 모델 설치가 끝났다고 간주하지 않는다.
 

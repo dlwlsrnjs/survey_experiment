@@ -10,7 +10,12 @@
 #SBATCH --error=runs/slurm-%x-%j.err
 set -euo pipefail
 
-PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+PROJECT_ROOT=${PROJECT_ROOT:-${SLURM_SUBMIT_DIR:-}}
+if [[ -z "$PROJECT_ROOT" || ! -f "$PROJECT_ROOT/pyproject.toml" || ! -f "$PROJECT_ROOT/scripts/download_required_models.py" ]]; then
+  echo "Cannot resolve project root. Submit from the repository root or export PROJECT_ROOT." >&2
+  exit 2
+fi
+PROJECT_ROOT=$(cd "$PROJECT_ROOT" && pwd)
 PROFILE=${PROFILE:-core}
 export HF_HOME=${HF_HOME:-$PROJECT_ROOT/.cache/huggingface}
 "$PROJECT_ROOT/.venvs/modern/bin/python" "$PROJECT_ROOT/scripts/download_required_models.py" \
