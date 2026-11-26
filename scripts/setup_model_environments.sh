@@ -20,6 +20,9 @@ create_environment() {
   if [ ! -x "$environment/bin/python" ]; then
     "$PYTHON_BIN" -m venv "$environment"
   fi
+  if ! "$environment/bin/python" -m pip --version >/dev/null 2>&1; then
+    "$environment/bin/python" -m ensurepip --upgrade
+  fi
   "$environment/bin/python" -m pip install --upgrade pip wheel
   "$environment/bin/python" -m pip install -r "$requirements"
 }
