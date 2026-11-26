@@ -1,0 +1,25 @@
+experiment_id: local32b_memjack_eval_imagegen_20261126
+manifest: ../data/manifests/fixed_inputs.jsonl
+output_root: ../runs
+split: eval
+repeats: 1
+role_repeats:
+  experience_use: 3
+target_query_cap: 3
+allowed_image_ops: [crop, mask, blur]
+roles: [generation, observation_planning, evaluation_revision, experience_use]
+experience_bank: ../data/manifests/memjack_train_experience.jsonl
+image_generation:
+  enabled: true
+  config: image_generators.yaml
+  profile: controlled_default
+model:
+  backend: openai_compatible
+  name: Qwen/Qwen2.5-VL-32B-Instruct
+  revision: 7cfb30d71a1f4f49a57592323337a4a4727301da
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: LOCAL_MODEL_API_KEY
+  temperature: 0.0
+  seed: 20261125
+  max_tokens: 1200
+  timeout_seconds: 600

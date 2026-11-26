@@ -5,8 +5,8 @@
 | 기법 | 원형에서 보존하는 부분 | 이번 역할 비교의 변형 | 원형 재현에 추가로 필요한 것 |
 |---|---|---|---|
 | FigStep | 작성 산출물과 고정 타이포그래피 렌더러 결과를 분리 | HarmBench Standard 목표를 사용 | SafeBench 전체 조건을 재현할 때 공식 질문 사용 |
-| HADES | 이미지 캡션 → 1–10점 평가와 설명 → 다음 이미지 프롬프트의 반복 정보 흐름, 최대 5회 | 32B VLM이 역할별 별도 호출을 담당할 수 있음 | PixArt 체크포인트와 고정 caption/judge 모델 |
-| HIMRD | 실패 후보 목록을 다음 prefix/suffix 재작성에 제공, 이해와 순응을 분리 | 고정 JSON 출력 규격 추가 | 실제 표적 응답 및 원 구현의 표적 모델 체크포인트 |
+| HADES | 이미지 캡션 → diffusion prompt → PixArt 이미지, 1–10점 평가와 설명 → 다음 이미지 프롬프트의 반복 정보 흐름, 최대 5회 | 공통 역할 비교에서는 SDXL을 쓰고, 원형 충실도 runner에서만 PixArt를 사용 | 고정 caption/judge 모델과 전체 5-step 이미지 최적화 loop |
+| HIMRD | SD3 Medium 50-step 512×512 이미지, 실패 후보 목록을 다음 prefix/suffix 재작성에 제공, 이해와 순응을 분리 | 공통 역할 비교에서는 SDXL과 고정 JSON 규격 사용. 원형 충실도 runner는 SD3 설정 사용 | 실제 표적 응답 및 원 구현의 표적 모델 체크포인트. 자동화는 single-file 대신 고정 Diffusers revision 사용 |
 | MM-Plan | 이미지 근거, 계획, 허용 동작을 분리 기록 | MM-SafetyBench 이미지에서 inference-only 32B 비교 | VE-Safety DUA, Qwen3-VL-4B 기반 GRPO 체크포인트 또는 8-GPU 재학습 |
 | MemJack | train split 경험만 사용, 피드백/메모리/무작위 메모리 조건 분리 | 공개 궤적을 공통 경험 은행으로 고정하고 모델 호출 전에 목표별 검색·길이 매칭 무작위 대조군을 manifest로 확정 | 표적 모델을 포함한 전체 멀티턴 공격 실행 |
 

@@ -4,6 +4,8 @@
 
 이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구 설계와 분석 원칙은 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
 
+새 머신에서는 `docs/SETUP_KO.md`와 `./bootstrap.sh --profile core`를 사용한다. 원형 충실도용 추가 모델까지 필요하면 `--profile full`을 사용한다. 외부 저장소·데이터·모델 revision과 checksum은 `configs/assets.lock.json`, 이미지 생성 설정은 `configs/image_generators.yaml`이 기준이다.
+
 ## 1. 현재 상태
 
 ### 완료된 항목
@@ -77,7 +79,7 @@ squeue -u "$USER" -o '%.18i %.20j %.2t %.10M %.6D %R'
 
 ```bash
 cd /home/ljk98/survey_experiment
-sbatch slurm/run_local32b_full.sbatch
+sbatch slurm/resume_local32b_20261125.sbatch
 ```
 
 runner는 `(role, condition, repeat, condition_id)`가 이미 `outputs.jsonl`에 있으면 `resume_skip` 이벤트를 기록하고 건너뛴다. 기존 `outputs.jsonl`, `events.jsonl`, `retrieval_plan.jsonl`을 삭제하거나 다른 디렉터리로 옮기지 않는다.
@@ -145,7 +147,11 @@ python3 -m survey_exp.annotation \
 | 자동 집계 | `survey_exp/metrics.py` |
 | 블라인드 평정지 | `survey_exp/annotation.py` |
 | 질적 사례 선택 | `survey_exp/qualitative.py` |
-| 전체 Slurm 실행 | `slurm/run_local32b_full.sbatch` |
+| 기존 2026-11-25 실행 재개 | `slurm/resume_local32b_20261125.sbatch` |
+| 신규 이미지 생성 전체 실행 | `configs/local32b_eval_imagegen.yaml`, `slurm/run_local32b_full.sbatch` |
+| 새 머신 부트스트랩 | `bootstrap.sh`, `docs/SETUP_KO.md` |
+| 자산 revision/checksum | `configs/assets.lock.json` |
+| 이미지 생성 프로필 | `configs/image_generators.yaml` |
 
 ## 7. 새 세션에 바로 붙여 넣을 요청문
 

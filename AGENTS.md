@@ -4,9 +4,10 @@
 
 작업을 시작하기 전에 다음 문서를 순서대로 읽는다.
 
-1. `docs/SESSION_HANDOFF_KO.md`
-2. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
-3. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
+1. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
+2. `docs/SESSION_HANDOFF_KO.md`
+3. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
+4. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
 
 운영 원칙:
 
@@ -17,3 +18,4 @@
 - `SD`와 `SD_TYPO`는 같은 `goal_id`의 짝지어진 조건이다.
 - 새 실험은 기존 `experiment_id`와 출력 디렉터리를 재사용할지 먼저 판단하고, resume 목적이 아니면 새 ID를 사용한다.
 - 완료 여부는 `outputs.jsonl` 행 수만으로 판단하지 말고 `completed.json`, provenance, 계획 호출 수, 사람평가 상태를 함께 확인한다.
+- 외부 저장소·데이터·모델 revision은 `configs/assets.lock.json`, 이미지 생성기는 `configs/image_generators.yaml`을 기준으로 하며 임의로 최신 revision으로 바꾸지 않는다.

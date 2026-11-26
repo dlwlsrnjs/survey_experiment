@@ -28,10 +28,23 @@
 | timeout | 600초 |
 | GPU | Slurm `h200` 파티션, H200 1장 |
 | 허용 이미지 연산 | `crop`, `mask`, `blur` |
+| 공통 이미지 생성기 | SDXL base 1.0, revision `462165984030d82259a11f4367a4eed129e94a7b` |
 
 실행별 실제 모델·GPU·Slurm 정보와 config/manifest/검색 계획의 SHA-256은 `runs/<experiment_id>/provenance.json`에 기록한다.
 
-### 2.2 데이터와 분할
+### 2.2 이미지 생성기의 통제와 원형 충실도
+
+이미지 생성기는 `configs/image_generators.yaml`에서 목적별로 분리한다.
+
+| 모드 | 모델 | 설정 원칙 |
+|---|---|---|
+| `controlled_default` | Stable Diffusion XL base 1.0 | 일반 역할 비교에서 보조 모델만 바꾸기 위한 공통 생성기. seed 20261125, 30 steps, guidance 7.0, 1024×1024 |
+| `source_fidelity.hades` | PixArt-XL-2-1024-MS | HADES 공개 구현의 pipeline과 기본 생성 설정 사용 |
+| `source_fidelity.himrd` | Stable Diffusion 3 Medium | HIMRD 공개 구현의 50 steps, guidance 8.0, 512×512 사용 |
+
+일반 역할 config와 GPT-4o 재생 config는 모두 `controlled_default`를 명시한다. 원형 충실도 runner는 기법별 profile을 선택한다. 생성 결과에는 모델, revision, pipeline, seed, step/guidance/해상도, artifact 경로와 SHA-256을 기록한다. 보조 모델이 거부하거나 유효한 scene prompt를 내지 않으면 이미지 생성을 수행하지 않고 그 상태를 로그에 남긴다.
+
+### 2.3 데이터와 분할
 
 고정 manifest는 `data/manifests/fixed_inputs.jsonl`이다.
 
@@ -44,7 +57,7 @@
 
 `SD`와 `SD_TYPO`는 서로 독립 표본으로 세지 않고 같은 `goal_id`의 짝지어진 조건으로 분석한다. MemJack 경험 은행은 공개 train split에서만 구축하며 eval/test 레코드가 들어오면 runner가 중단된다.
 
-### 2.3 역할별 입력과 중간 산출물
+### 2.4 역할별 입력과 중간 산출물
 
 | 역할 | 적용 입력 | 구조화 중간 산출물 | 다음 소비자 |
 |---|---|---|---|

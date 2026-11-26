@@ -11,6 +11,8 @@ from typing import Any
 
 from .client import MockClient, OpenAICompatibleClient
 from .config import ExperimentConfig, load_config
+from .image_generation import generate_image, select_profile
+from .paths import project_root_from_config, resolve_project_path
 from .retrieval import build_index, matched_random, retrieve_indexed
 from .roles import (
     auto_validate,
@@ -94,7 +96,22 @@ def run(
     run_dir = config.output_root / config.experiment_id
     run_dir.mkdir(parents=True, exist_ok=True)
     client = MockClient(config.model) if mock else OpenAICompatibleClient(config.model)
+    project_root = project_root_from_config(config.source)
+    image_generation_settings = config.extra.get("image_generation") or {}
+    image_generator = None
+    if image_generation_settings.get("enabled"):
+        generator_config = Path(image_generation_settings["config"])
+        if not generator_config.is_absolute() and config.source:
+            generator_config = (config.source.parent / generator_config).resolve()
+        image_generator = select_profile(generator_config, image_generation_settings["profile"])
     provenance = _provenance(config, client)
+    if image_generator is not None:
+        provenance["image_generation"] = {
+            "profile": image_generation_settings["profile"],
+            "config_path": str(generator_config),
+            "config_sha256": sha256_file(generator_config),
+            "resolved_profile": image_generator,
+        }
     atomic_write_text(run_dir / "provenance.json", json.dumps(provenance, ensure_ascii=False, indent=2) + "\n")
     events_path = run_dir / "events.jsonl"
     outputs_path = run_dir / "outputs.jsonl"
@@ -164,7 +181,7 @@ def run(
         for repeat in range(repeats):
             for row in rows:
                 condition_id = row["condition_id"]
-                image = Path(row["image_path"]) if row.get("image_path") else None
+                image = resolve_project_path(row["image_path"], project_root) if row.get("image_path") else None
                 skip_reason = None
                 variants: list[tuple[str | None, str, str, Path | None]] = []
                 if role == "generation":
@@ -234,17 +251,31 @@ def run(
                         "evaluation_revision": "rewriter_or_stopping_controller",
                         "experience_use": "candidate_generator",
                     }.get(role, "unknown")
-                    tool_result: dict[str, Any] = {"status": "not_run_in_auxiliary_role_replay"}
+                    tool_result: dict[str, Any] = {
+                        "typography": {"status": "not_run"},
+                        "image_generation": {"status": "not_run"},
+                    }
                     if role == "generation" and result.parsed and not result.parsed.get("refusal"):
                         statement = result.parsed.get("render_statement")
                         if isinstance(statement, str) and statement.strip():
                             from .tools import render_typography
                             artifact = run_dir / "artifacts/rendered" / f"{condition_id.replace(':', '__')}_r{repeat}.png"
-                            font = Path.cwd() / "third_party/MM-SafetyBench/assets/font/ARIAL.TTF"
+                            font = project_root / "third_party/MM-SafetyBench/assets/font/ARIAL.TTF"
                             try:
-                                tool_result = render_typography(statement, artifact, font)
+                                tool_result["typography"] = render_typography(statement, artifact, font)
                             except Exception as exc:
-                                tool_result = {"status": "error", "tool": "deterministic_typography_renderer_v1", "error": type(exc).__name__, "message": str(exc)}
+                                tool_result["typography"] = {"status": "error", "tool": "deterministic_typography_renderer_v1", "error": type(exc).__name__, "message": str(exc)}
+                        scene = result.parsed.get("scene_description")
+                        if image_generator and isinstance(scene, str) and scene.strip():
+                            generated = run_dir / "artifacts/generated" / f"{condition_id.replace(':', '__')}_r{repeat}.png"
+                            try:
+                                tool_result["image_generation"] = generate_image(scene, generated, image_generator)
+                            except Exception as exc:
+                                tool_result["image_generation"] = {
+                                    "status": "error", "tool": "revision_pinned_text_to_image_v1",
+                                    "error": type(exc).__name__, "message": str(exc),
+                                    "model": image_generator.get("model"), "revision": image_generator.get("revision"),
+                                }
                     output = {
                         "record_version": "1.0",
                         "timestamp": utc_now(),

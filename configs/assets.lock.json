@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "repositories": [
+    {"name": "FigStep", "url": "https://github.com/CryptoAILab/FigStep.git", "revision": "0861b17b3d67887c06ee3534ec65b3012f9becb7"},
+    {"name": "HADES", "url": "https://github.com/AoiDragon/HADES.git", "revision": "a2670b76e42448831c86d44dec02a8fa3a12d468"},
+    {"name": "HIMRD-jailbreak", "url": "https://github.com/MaTengSYSU/HIMRD-jailbreak.git", "revision": "614c6f7fcf496b9ef79c1ce393ba8e0e748adcef"},
+    {"name": "HarmBench", "url": "https://github.com/centerforaisafety/HarmBench.git", "revision": "8e1604d1171fe8a48d8febecd22f600e462bdcdd"},
+    {"name": "MM-Plan", "url": "https://github.com/yunbeizhang/MM-Plan.git", "revision": "45fe19f59de819589f90081c8602405ad9c50405"},
+    {"name": "MM-SafetyBench", "url": "https://github.com/isXinLiu/MM-SafetyBench.git", "revision": "b80eedea3db312c09ded2082813390f68e750ef3"},
+    {"name": "MemJack", "url": "https://github.com/JianhaoChen2025/MemJack.git", "revision": "a8d8a83378afe18bffce04b28d530a423d31508d"}
+  ],
+  "datasets": {
+    "mm_safetybench_images": {
+      "source": "google_drive",
+      "file_id": "1xjW9k-aGkmwycqGCXbru70FaSKhSDcR_",
+      "filename": "MM-SafetyBench-imgs.zip",
+      "sha256": "7e1a9f08212038ceaa74801964d2b97c219509663bbd017ab77abb1b063cc23e",
+      "extract_root": "MM-SafetyBench(imgs)"
+    },
+    "memjack": {
+      "repo_id": "senwuou/MemJack",
+      "repo_type": "dataset",
+      "revision": "3ba067e58b99c3becc57b13e9352f0264bea9338",
+      "gated": true,
+      "files": {
+        "rounds.jsonl": "e1ace8c5b82da7e09696053a00707f8c7f47ca90d197adf4dd45a335e4d11837",
+        "trajectories.jsonl": "1149fba27544a86269432e16c818d3ec22ef738f5f61b06e2bfd41fc68b281e7",
+        "splits/train_ids.txt": "ab2938d75dfbc953465df6d2bc3e7ca359abdffff25a4880cd1340f1a6ad69bb",
+        "splits/val_ids.txt": "cede804471a4fa4d212dc991271b9fbdd14eb08dedb4ecd2e755d68c6b8d730d",
+        "splits/test_ids.txt": "8f39bc8598266abd6da04be3c86084b35c703f113aa80134340b1fd34f185f10",
+        "splits/manifest.json": "135e28a3018b36190086bc11b0ccb2fd48179be6b6c2e6fd40198378aaae5cf0"
+      }
+    }
+  },
+  "models": [
+    {"repo_id": "Qwen/Qwen2.5-VL-32B-Instruct", "revision": "7cfb30d71a1f4f49a57592323337a4a4727301da", "role": "core:auxiliary_model", "profiles": ["core", "full"]},
+    {
+      "repo_id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "revision": "462165984030d82259a11f4367a4eed129e94a7b",
+      "role": "core:controlled_image_generator",
+      "profiles": ["core", "full"],
+      "allow_patterns": [
+        "model_index.json",
+        "scheduler/*",
+        "tokenizer/*",
+        "tokenizer_2/*",
+        "text_encoder/config.json",
+        "text_encoder/model.fp16.safetensors",
+        "text_encoder_2/config.json",
+        "text_encoder_2/model.fp16.safetensors",
+        "unet/config.json",
+        "unet/diffusion_pytorch_model.fp16.safetensors",
+        "vae/config.json",
+        "vae/diffusion_pytorch_model.fp16.safetensors",
+        "feature_extractor/*"
+      ]
+    },
+    {"repo_id": "PixArt-alpha/PixArt-XL-2-1024-MS", "revision": "b89adadeccd9ead2adcb9fa2825d3fabec48d404", "role": "HADES:image_generator", "profiles": ["full"]},
+    {"repo_id": "liuhaotian/llava-v1.5-7b", "revision": "4481d270cc22fd5c4d1bb5df129622006ccd9234", "role": "HADES:image_captioner_and_target", "profiles": ["full"]},
+    {"repo_id": "PKU-Alignment/beaver-dam-7b", "revision": "3a5b70888869f04336d0d8344185ed74268ef896", "role": "HADES:final_safety_evaluator", "profiles": ["full"]},
+    {"repo_id": "stabilityai/stable-diffusion-3-medium-diffusers", "revision": "ea42f8cef0f178587cf766dc8129abd379c90671", "role": "HIMRD:image_generator:gated", "profiles": ["full"]},
+    {"repo_id": "llava-hf/llava-v1.6-mistral-7b-hf", "revision": "2424fdd47412fccc66d91719126b420e9fbd7065", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
+    {"repo_id": "THUDM/glm-4v-9b", "revision": "3376fea6e54db68587a89bf1ac27a6889bafb867", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen-VL-Chat", "revision": "f57cfbd358cb56b710d963669ad1bcfb44cdcdd8", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
+    {"repo_id": "deepseek-ai/deepseek-vl-7b-chat", "revision": "6f16f00805f45b5249f709ce21820122eeb43556", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
+    {"repo_id": "01-ai/Yi-VL-34B", "revision": "2bd12c3b988c443b34b3c8b0355a01548aa2e33f", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
+    {"repo_id": "Vision-CAIR/MiniGPT-4", "revision": "e427c1915f6e23c054279dc42d3a743907e6ec47", "role": "HIMRD:code_and_config_only", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3-VL-4B-Instruct", "revision": "ebb281ec70b05090aa6165b016eac8ec08e71b17", "role": "MM-Plan:original_base_planner", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen2.5-VL-7B-Instruct", "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5", "role": "controlled_comparison:fixed_target_vlm", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3-VL-Embedding-8B", "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7", "role": "MemJack:embedding", "profiles": ["full"]}
+  ]
+}

@@ -9,6 +9,10 @@ target_query_cap: 3
 allowed_image_ops: [crop, mask, blur]
 roles: [generation, observation_planning, evaluation_revision, experience_use]
 experience_bank: ../data/manifests/memjack_train_experience.jsonl
+image_generation:
+  enabled: true
+  config: image_generators.yaml
+  profile: controlled_default
 model:
   backend: openai_compatible
   name: gpt-4o

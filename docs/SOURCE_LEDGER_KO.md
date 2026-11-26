@@ -13,6 +13,10 @@
 | MemJack 조건 | A/B/C 및 C_random, 3회 반복, 질의 상한 3 | 실험 계획서 PDF p. 4 |
 | MemJack 공개 궤적 | 5,959 trajectories, 55,867 rounds | 첨부된 공개 MemJack-Bench의 실제 파일 행 수 |
 | MM-SafetyBench 이미지 배포본 | ZIP SHA-256 `7e1a9f08212038ceaa74801964d2b97c219509663bbd017ab77abb1b063cc23e` | 공식 GitHub README의 Google Drive 배포본을 내려받아 계산 |
+| MemJack 공개 궤적 배포본 | `senwuou/MemJack`, revision `3ba067e58b99c3becc57b13e9352f0264bea9338` | Hugging Face dataset card와 실제 파일 checksum |
+| 공통 이미지 생성기 | SDXL base 1.0, revision `462165984030d82259a11f4367a4eed129e94a7b` | 통제 실험용 고정 설정 `configs/image_generators.yaml` |
+| HADES 원형 이미지 생성기 | PixArt-XL-2-1024-MS, revision `b89adadeccd9ead2adcb9fa2825d3fabec48d404` | HADES 공개 코드 `PixArtAlphaPipeline` 호출 |
+| HIMRD 원형 이미지 생성기 | SD3 Medium Diffusers, revision `ea42f8cef0f178587cf766dc8129abd379c90671` | HIMRD 공개 코드의 50-step, 512×512, guidance 8.0 설정 |
 
 결과 수치, 거부율, 품질 분포, 비용은 아직 실행 산출물이므로 문서에서 미리 채우지 않는다.
 

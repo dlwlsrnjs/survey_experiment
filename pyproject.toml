@@ -9,6 +9,7 @@ vlm-aux-prepare = "survey_exp.dataset:main"
 vlm-aux-run = "survey_exp.runner:main"
 vlm-aux-export = "survey_exp.annotation:main"
 vlm-aux-report = "survey_exp.metrics:main"
+vlm-aux-doctor = "survey_exp.doctor:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

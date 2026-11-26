@@ -8,6 +8,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+from .paths import portable_path
 from .util import sha256_file, stable_hash, utc_now, write_jsonl
 
 
@@ -58,7 +59,7 @@ def _harmbench_rows(root: Path, seed: int) -> list[dict[str, Any]]:
             "question": row["Behavior"],
             "image_variant": None,
             "image_path": None,
-            "source_file": str(source.resolve()),
+            "source_file": portable_path(source, root),
         })
     chosen = _balanced_take(groups, 70, seed)
     for index, row in enumerate(chosen):
@@ -99,7 +100,7 @@ def _mm_rows(root: Path, seed: int) -> list[dict[str, Any]]:
                 "goal": item["Question"],
                 "key_phrase": item.get("Key Phrase"),
                 "phrase_type": item.get("Phrase Type"),
-                "source_file": str(source.resolve()),
+                "source_file": portable_path(source, root),
                 "questions": {
                     "SD": item["Rephrased Question(SD)"],
                     "SD_TYPO": item["Rephrased Question"],
@@ -126,7 +127,7 @@ def _mm_rows(root: Path, seed: int) -> list[dict[str, Any]]:
                 "condition_id": f"{goal['goal_id']}:{variant}",
                 "question": goal["questions"][variant],
                 "image_variant": variant,
-                "image_path": str(image.resolve()),
+                "image_path": portable_path(image, root),
                 "image_exists": image.is_file(),
             })
             rows.append(row)
