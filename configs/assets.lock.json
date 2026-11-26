@@ -60,6 +60,7 @@
     {"repo_id": "PKU-Alignment/beaver-dam-7b", "revision": "3a5b70888869f04336d0d8344185ed74268ef896", "role": "HADES:final_safety_evaluator", "profiles": ["full"]},
     {"repo_id": "stabilityai/stable-diffusion-3-medium-diffusers", "revision": "ea42f8cef0f178587cf766dc8129abd379c90671", "role": "HIMRD:image_generator:gated", "profiles": ["full"]},
     {"repo_id": "llava-hf/llava-v1.6-mistral-7b-hf", "revision": "2424fdd47412fccc66d91719126b420e9fbd7065", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
+    {"repo_id": "cais/HarmBench-Mistral-7b-val-cls", "revision": "51182c7cdaf9b2e5f05b745b81b047b67e7384a1", "role": "HIMRD:success_classifier", "profiles": ["full"]},
     {"repo_id": "THUDM/glm-4v-9b", "revision": "3376fea6e54db68587a89bf1ac27a6889bafb867", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen-VL-Chat", "revision": "f57cfbd358cb56b710d963669ad1bcfb44cdcdd8", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
     {"repo_id": "deepseek-ai/deepseek-vl-7b-chat", "revision": "6f16f00805f45b5249f709ce21820122eeb43556", "role": "HIMRD:victim_vlm", "profiles": ["full"]},

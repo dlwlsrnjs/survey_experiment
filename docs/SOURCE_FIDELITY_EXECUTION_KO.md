@@ -19,7 +19,7 @@
 |---|---|---:|---|
 | FigStep | 공개 `SafeBench` | 500개 질문·500개 이미지 | 원 타이포그래피 이미지와 대상 VLM 실행 준비 |
 | HADES | `Monosail/HADES` | 공식 parquet 2개, 약 698MB | 다운로드·schema 검증 후 200개 이상 |
-| HIMRD | 공개 `data/SafeBench/SafeBench.txt` | 350개 목표 | 앞 200개 고유 목표의 GPT 역할 실행 중 |
+| HIMRD | 공개 `data/SafeBench/SafeBench.txt` | 350개 목표 | 앞 200개 GPT 역할 완료, GPU 종단간 실행 준비 |
 | MM-Plan | `zybeich/VE-Safety` | 440개, DUA 배포 | Qwen3-VL-4B planner와 원 executor 경로 준비 |
 | MemJack | 공식 HF train/val/test | 로컬 다운로드 완료 | Qwen3-VL-8B·Qwen3Guard·embedding 원 역할 분리 |
 
@@ -42,14 +42,28 @@ HIMRD manifest는 `data/manifests/himrd_safebench_full.jsonl`이며 공개 구�
 
 파일럿 출력은 `runs/source_fidelity_gpt4omini_smoke10_20261126`에 있으며 Git에는 올리지 않는다. HADES의 거부는 API 오류나 parser 오류로 합치지 않고 모델 거부 결과로 보존한다. 이 smoke test는 이미지 생성기를 끈 단계 검증이므로 최종 HADES/HIMRD 결과가 아니다.
 
-## 현재 본 실행
+## GPT 역할 실행 결과
 
-Slurm `59810`은 HIMRD 원 SafeBench의 앞 200개 고유 목표를 대상으로 다음 세 GPT 역할을 실행한다.
+Slurm `59810`은 HIMRD 원 SafeBench의 앞 200개 고유 목표를 대상으로 다음 세 GPT 역할을 완료했다.
 
 1. SD3 장면 설명 생성
 2. 이해 실패 시 prefix 재작성
 3. 이해했지만 실패한 경우의 suffix 재작성
 
-계획 레코드는 600개다. 현재 작업은 GPT 역할의 출력과 token·비용을 먼저 확보하며 `--no-image-generation`으로 실행된다. SD3 Medium 체크포인트가 완전하게 준비되고 표적 VLM·HarmBench 분기가 연결되기 전에는 이를 HIMRD end-to-end 재현으로 부르지 않는다.
+계획한 600개 레코드는 모두 생성됐다. 이 결과 중 장면 설명 200개는 SD3 입력으로 재사용한다. prefix/suffix 400개는 실제 대상 VLM 판정 전에 생성됐으므로 최종 적응 궤적이 아니라 첫 반복 후보군으로만 사용한다. 이 실행 자체를 HIMRD end-to-end 재현으로 부르지 않는다.
 
 실행 파일은 `slurm/run_himrd_gpt4omini_safebench200.sbatch`, 출력은 `runs/himrd_gpt4omini_safebench200_20261126`이다. OpenAI 키는 저장소에 두지 않고 권한 `600`의 외부 파일에서만 읽는다.
+
+## H200 종단간 실행
+
+`survey_exp/himrd_end_to_end.py`는 다음 순서를 사례별 상태 파일과 event log로 남기며 중단 후 재개할 수 있다.
+
+1. 기존 GPT 장면 설명 재사용
+2. GPT-4o mini로 원 구현의 multimodal risk distribution 수행
+3. SD3 Medium 50 steps, guidance 8.0, 512×512 장면 생성
+4. 이미지 상단에 분리된 시각 문구를 렌더링하고 세로 결합
+5. LLaVA-v1.6-Mistral-7B 대상 응답 생성
+6. 원 저장소의 HarmBench prompt와 HarmBench-Mistral-7B classifier로 판정
+7. 이해 실패는 prefix, 이해했지만 공격 실패한 사례는 suffix를 최대 5회 조건부 수정
+
+H200 제출 파일은 `slurm/run_himrd_end_to_end_h200.sbatch`다. 2026-11-26 점검에서 LLaVA와 HarmBench 가중치는 완전했지만, 현재 Hugging Face 계정은 gated 저장소 `stabilityai/stable-diffusion-3-medium-diffusers`에 HTTP 403을 반환했다. SD3 snapshot에는 LICENSE와 README만 있고 실제 가중치는 없다. 모델 페이지에서 접근 승인을 받은 다음 `bootstrap.sh --profile full` 또는 고정 revision 다운로드를 실행해야 한다. 이 접근 조건이 충족되기 전에는 실패가 확정된 H200 작업을 제출하지 않는다.

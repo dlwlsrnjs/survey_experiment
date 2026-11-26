@@ -161,3 +161,12 @@ python3 -m survey_exp.annotation \
 ## 7. 새 세션에 바로 붙여 넣을 요청문
 
 > `/home/ljk98/survey_experiment`의 작업을 이어서 진행해줘. 먼저 `AGENTS.md`, `docs/SURVEY_TO_EXPERIMENT_KO.md`, `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`, `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`, `docs/SESSION_HANDOFF_KO.md`를 읽고 Git/Slurm/원시 출력 건수를 확인해. 기존 실행 파일을 삭제하거나 덮어쓰지 말고, 문서의 완료 조건과 분석 경계를 지켜서 남은 작업을 진행해줘.
+
+## 8. 2026-11-26 HIMRD H200 종단간 상태
+
+- GPT-4o mini 역할 출력은 `runs/himrd_gpt4omini_safebench200_20261126`에 600/600건 완료됐다.
+- `survey_exp/himrd_end_to_end.py`와 `slurm/run_himrd_end_to_end_h200.sbatch`에 SD3 → LLaVA-v1.6-Mistral-7B → HarmBench → 조건부 prefix/suffix 반복 경로가 구현돼 있다.
+- 기존 장면 설명 200건은 직접 재사용한다. 기존 prefix/suffix는 실제 VLM 응답 전 결과이므로 첫 반복 후보로만 사용한다.
+- LLaVA와 `cais/HarmBench-Mistral-7b-val-cls` 가중치는 `$HOME/.cache/huggingface`에 완전하다.
+- SD3 Medium은 gated 접근이 승인되지 않아 HTTP 403이다. snapshot에 실제 가중치가 없으므로 아직 H200 smoke/full job을 제출하지 않았다.
+- Hugging Face 모델 페이지에서 `stabilityai/stable-diffusion-3-medium-diffusers` 접근을 승인받은 뒤 SD3를 고정 revision `ea42f8cef0f178587cf766dc8129abd379c90671`로 내려받고, 1건 smoke가 성공하면 200건 작업을 제출한다.
