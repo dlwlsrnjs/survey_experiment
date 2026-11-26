@@ -4,10 +4,11 @@
 
 작업을 시작하기 전에 다음 문서를 순서대로 읽는다.
 
-1. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
-2. `docs/SESSION_HANDOFF_KO.md`
-3. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
-4. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
+1. `docs/SURVEY_TO_EXPERIMENT_KO.md`
+2. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
+3. `docs/SESSION_HANDOFF_KO.md`
+4. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
+5. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
 
 운영 원칙:
 

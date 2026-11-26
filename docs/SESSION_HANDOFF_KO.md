@@ -2,7 +2,7 @@
 
 마지막 점검: **2026-11-26 10:39 KST**
 
-이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구 설계와 분석 원칙은 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
+이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구의 논문 연결은 `docs/SURVEY_TO_EXPERIMENT_KO.md`, 구체적인 설계와 분석 원칙은 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
 
 새 머신에서는 `docs/SETUP_KO.md`와 `./bootstrap.sh --profile core`를 사용한다. 원형 충실도용 추가 모델까지 필요하면 `--profile full`을 사용한다. 외부 저장소·데이터·모델 revision과 checksum은 `configs/assets.lock.json`, 이미지 생성 설정은 `configs/image_generators.yaml`이 기준이다.
 
@@ -135,6 +135,7 @@ python3 -m survey_exp.annotation \
 | 목적 | 파일 |
 |---|---|
 | 프로젝트 시작점 | `README.md` |
+| 서베이–실험 연결과 연구 의도 | `docs/SURVEY_TO_EXPERIMENT_KO.md` |
 | 연구 설계·중간작업 분석 | `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md` |
 | 원형 보존/변형 경계 | `docs/PROTOCOL_ADHERENCE_KO.md` |
 | 공개 코드 대응 | `docs/CODE_ANALYSIS_KO.md` |
@@ -155,4 +156,4 @@ python3 -m survey_exp.annotation \
 
 ## 7. 새 세션에 바로 붙여 넣을 요청문
 
-> `/home/ljk98/survey_experiment`의 작업을 이어서 진행해줘. 먼저 `AGENTS.md`, `docs/SESSION_HANDOFF_KO.md`, `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 읽고 Git/Slurm/원시 출력 건수를 확인해. 기존 실행 파일을 삭제하거나 덮어쓰지 말고, 문서의 완료 조건과 분석 경계를 지켜서 남은 작업을 진행해줘.
+> `/home/ljk98/survey_experiment`의 작업을 이어서 진행해줘. 먼저 `AGENTS.md`, `docs/SURVEY_TO_EXPERIMENT_KO.md`, `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`, `docs/SESSION_HANDOFF_KO.md`를 읽고 Git/Slurm/원시 출력 건수를 확인해. 기존 실행 파일을 삭제하거나 덮어쓰지 말고, 문서의 완료 조건과 분석 경계를 지켜서 남은 작업을 진행해줘.
