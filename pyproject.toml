@@ -1,0 +1,15 @@
+[project]
+name = "vlm-aux-model-experiment"
+version = "0.1.0"
+description = "Reproducible auxiliary-model role experiments for a VLM safety survey"
+requires-python = ">=3.10"
+
+[project.scripts]
+vlm-aux-prepare = "survey_exp.dataset:main"
+vlm-aux-run = "survey_exp.runner:main"
+vlm-aux-export = "survey_exp.annotation:main"
+vlm-aux-report = "survey_exp.metrics:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+

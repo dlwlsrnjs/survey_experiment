@@ -1,0 +1,24 @@
+experiment_id: gpt4o_replay_FILL_DATE
+manifest: ../data/manifests/fixed_inputs.jsonl
+output_root: ../runs
+split: eval
+repeats: 1
+role_repeats:
+  experience_use: 3
+target_query_cap: 3
+allowed_image_ops: [crop, mask, blur]
+roles: [generation, observation_planning, evaluation_revision, experience_use]
+experience_bank: ../data/manifests/memjack_train_experience.jsonl
+model:
+  backend: openai_compatible
+  name: gpt-4o
+  revision: null
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  temperature: 0.0
+  seed: 20261125
+  max_tokens: 1200
+  timeout_seconds: 600
+  input_price_per_million: null
+  output_price_per_million: null
+

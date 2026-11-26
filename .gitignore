@@ -1,0 +1,13 @@
+.venv/
+.venvs/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+runs/*
+!runs/.gitkeep
+annotations/*
+!annotations/.gitkeep
+data/raw/
+data/manifests/memjack_train_experience.jsonl
+third_party/*/
+

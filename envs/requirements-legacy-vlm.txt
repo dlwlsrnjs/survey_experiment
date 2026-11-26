@@ -1,0 +1,13 @@
+torch==2.7.1
+torchvision==0.22.1
+transformers==4.37.2
+accelerate==0.27.2
+huggingface-hub==0.36.0
+safetensors>=0.5.3
+sentencepiece>=0.2.0
+protobuf>=4,<5
+Pillow>=10
+einops>=0.7
+timm==0.9.16
+openai>=1,<2
+numpy<2

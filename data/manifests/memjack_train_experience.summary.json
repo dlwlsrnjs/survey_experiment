@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-11-25T06:27:40.225273+00:00",
+  "source": "/home/ljk98/survey_experiment/data/raw/memjack",
+  "source_rounds_sha256": "e1ace8c5b82da7e09696053a00707f8c7f47ca90d197adf4dd45a335e4d11837",
+  "source_split_sha256": "ab2938d75dfbc953465df6d2bc3e7ca359abdffff25a4880cd1340f1a6ad69bb",
+  "split": "train",
+  "records": 45016,
+  "skipped_not_split": 10851,
+  "output": "/home/ljk98/survey_experiment/data/manifests/memjack_train_experience.jsonl",
+  "output_sha256": "e9eea48f25c0f0d387370df2f1a6294d11f840d75721516c6df6e12a431d0c78"
+}

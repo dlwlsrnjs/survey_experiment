@@ -1,0 +1,56 @@
+protocol_version: 1.0
+comparison_unit: model_call
+standardized_role_comparison:
+  temperature: 0.0
+  seed: 20261125
+  purpose: compare auxiliary models under identical inputs, schemas, tools, and budgets
+methods:
+  FigStep:
+    repository: third_party/FigStep
+    revision: 0861b17b3d67887c06ee3534ec65b3012f9becb7
+    preserved:
+      - deterministic typography is a tool outcome separate from writer refusal/quality
+      - rendered statement is the writer artifact
+    adaptation: HarmBench Standard goals replace SafeBench goals for the cross-method role comparison
+  HADES:
+    repository: third_party/HADES
+    revision: a2670b76e42448831c86d44dec02a8fa3a12d468
+    original_settings:
+      iteration_steps: 5
+      attacker_temperature: 1.1
+      caption_temperature: 0.2
+      diffusion_prompt_word_cap: 120
+    preserved:
+      - caption scoring is separate from target-response scoring
+      - each refinement receives prompt, caption, score, and explanation history
+    adaptation: fixed 32B VLM can fill writer/caption/judge roles in separate calls; role identity is logged
+  HIMRD:
+    repository: third_party/HIMRD-jailbreak
+    revision: 614c6f7fcf496b9ef79c1ce393ba8e0e748adcef
+    preserved:
+      - failed candidate collection is supplied to rewrite calls
+      - understanding and compliance judgments remain separate
+    blocked_until: target responses are supplied through --target-responses
+  MM-Plan:
+    repository: third_party/MM-Plan
+    revision: 45fe19f59de819589f90081c8602405ad9c50405
+    original_settings:
+      base_planner: Qwen/Qwen3-VL-4B-Instruct
+      rollout_temperature: 0.7
+      rollout_n: 4
+      training_epochs: 10
+      training_gpus: 8
+    preserved:
+      - visual evidence and planned operations are logged separately
+      - allowed operations are fixed to crop, mask, blur
+    adaptation: 32B role comparison is inference-only and is not a reproduction of the GRPO-trained planner
+  MemJack:
+    repository: third_party/MemJack
+    revision: a8d8a83378afe18bffce04b28d530a423d31508d
+    dataset: data/raw/memjack
+    preserved:
+      - development/train experience only
+      - A independent, B feedback, C relevant experience, C_random matched random experience
+      - retrieval results fixed before model generation
+      - target query cap 3 and 3 repeats in evaluation config
+
