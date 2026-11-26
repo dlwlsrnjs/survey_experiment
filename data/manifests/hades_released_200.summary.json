@@ -1,0 +1,25 @@
+{
+  "dataset_revision": "8c7388c566c8844a0732a2ad2156b72ae00c92c8",
+  "parquet_sha256": {
+    "test-00000-of-00002.parquet": "edd1d1fcb6e24fe6da42be3e724994cd7fb98570ed7b4817eb7f8e2521cb506b",
+    "test-00001-of-00002.parquet": "a5b2b289384a17fd1bdb5ea51c996c7b9906980b6e24fefdfd8cd2a24c0d2d7e"
+  },
+  "goals": 200,
+  "rows": 1200,
+  "steps": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "scenarios": {
+    "Animal": 40,
+    "Financial": 40,
+    "Privacy": 40,
+    "Self-Harm": 40,
+    "Violence": 40
+  },
+  "manifest_sha256": "73efc9a06375564b03d628814ecd21b3f9a41d67cc85716f756af73650a49239"
+}

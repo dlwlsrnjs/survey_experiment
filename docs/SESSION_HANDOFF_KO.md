@@ -171,3 +171,12 @@ python3 -m survey_exp.annotation \
 - SD3 Medium gated 접근이 승인됐고 고정 revision `ea42f8cef0f178587cf766dc8129abd379c90671`의 38개 파일, 약 15GB 다운로드와 오프라인 해석 검증이 완료됐다.
 - H200 1건 smoke는 Slurm `59824`, smoke 성공 후 자동 시작할 200건 본 작업은 `59825`다. `59825`는 `afterok:59824` 의존성을 사용한다.
 - smoke 출력은 `runs/himrd_e2e_llava16_smoke1_20261126`, 본 출력은 `runs/himrd_e2e_llava16_200_20261126`이다.
+
+## 9. 2026-11-26 다른 원형 충실도 작업
+
+- HADES 공식 데이터 revision `8c7388c566c8844a0732a2ad2156b72ae00c92c8`의 4,500행을 내려받았다. 5개 scenario에서 40개 목표씩, 각 0–5단계 이미지를 포함한 1,200행 manifest는 `data/manifests/hades_released_200.jsonl`이다.
+- HADES 원 LLaVA-1.5-7B + Beaver-Dam-7B smoke는 `59826`, 성공 후 200목표×6단계(1,200행) 본 작업은 `59830`이다. 처음 제출한 `59827`은 200행으로 잘못 제한되어 시작 전에 취소·교체했다.
+- FigStep 공식 SafeBench에서 범주별 20개씩 뽑은 200행 manifest는 `data/manifests/figstep_safebench_200.jsonl`이다. LLaVA-1.5-7B smoke는 `59828`, 성공 후 본 작업은 `59829`다.
+- FigStep 주 평가는 논문처럼 사람 판정이다. `completed.json`의 응답 완료와 ASR 확정을 혼동하지 않는다.
+- MM-Plan VE-Safety는 현재 Hugging Face 계정에서 `test.parquet` 다운로드가 HTTP 403이다. DUA 접근 승인이 필요하다.
+- MemJack 전체 원형 종단간 작업은 아직 제출하지 않았다. 2026-11-26 07:05 UTC 기준 32B 역할 재생은 1,915/2,100건(91.2%)이었다.

@@ -64,6 +64,15 @@ if [ "$SKIP_DATA" -eq 0 ]; then
     --dataset-root "$PROJECT_ROOT/data/raw/memjack" \
     --output "$PROJECT_ROOT/data/manifests/memjack_train_experience.jsonl" \
     --split train
+  "$PYTHON" "$PROJECT_ROOT/scripts/prepare_hades_released.py" \
+    --dataset-root "$PROJECT_ROOT/data/raw/hades" \
+    --output-root "$PROJECT_ROOT/data/raw/hades/released_200" \
+    --manifest "$PROJECT_ROOT/data/manifests/hades_released_200.jsonl"
+  "$PYTHON" "$PROJECT_ROOT/scripts/prepare_figstep_manifest.py" \
+    --csv "$PROJECT_ROOT/third_party/FigStep/data/question/safebench.csv" \
+    --image-root "$PROJECT_ROOT/third_party/FigStep/data/images/SafeBench" \
+    --output "$PROJECT_ROOT/data/manifests/figstep_safebench_200.jsonl" \
+    --per-category 20
 fi
 if [ "$SKIP_MODELS" -eq 0 ]; then
   "$PYTHON" "$PROJECT_ROOT/scripts/download_required_models.py" \

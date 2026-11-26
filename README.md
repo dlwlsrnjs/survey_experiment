@@ -69,9 +69,12 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 
 - 외부 공개 코드 7개, MM-SafetyBench 이미지, MemJack 데이터와 경험 은행을 고정 revision/checksum으로 복원할 수 있다.
 - 기본 보조 모델은 `Qwen/Qwen2.5-VL-32B-Instruct`이고, 공통 이미지 생성기는 SDXL이다.
-- 현재 32B 실행은 첫 로컬 기준선이며, 크기 구간을 포함한 모델급 비교와 의도 노출 조건 실험은 아직 실행 전이다.
-- HADES용 PixArt와 HIMRD용 SD3 설정은 원형 충실도 실행으로 분리되어 있다.
-- 2026-11-25에 시작한 기존 전체 실행은 393/2,100건까지 진행된 상태이며, 당시 config SHA를 보존한 전용 재개 경로가 있다.
+- 2026-11-26 07:05 UTC 기준 32B 역할 비교는 1,915/2,100건(91.2%)이며, 당시 config SHA를 보존한 전용 재개 작업이 실행 중이다.
+- HIMRD 원형 경로는 SD3 Medium, LLaVA-v1.6-Mistral-7B, HarmBench-Mistral-7B를 사용하는 1건 smoke와 200건 본 작업이 제출돼 있다.
+- HADES는 공식 공개 6단계 최적화 이미지 중 200개 고유 목표(1,200장)를 고정 manifest로 만들었고, 원 LLaVA-1.5-7B와 Beaver-Dam-7B 평가 작업을 제출했다.
+- FigStep은 공식 SafeBench 이미지와 원 텍스트 prompt를 사용하는 200건 LLaVA-1.5-7B 작업을 제출했다. 논문처럼 사람 판정을 주 평가로 사용하므로 응답 생성 완료와 ASR 확정을 구분한다.
+- MM-Plan은 Qwen3-VL-4B base planner는 준비됐지만 VE-Safety DUA 승인을 기다리고 있으며, 공개 저장소에는 논문 학습 완료 checkpoint가 없다.
+- MemJack 원 역할 모델과 공개 궤적은 준비됐지만 현재 실행 중인 것은 32B 역할 재생이다. 원 멀티에이전트 종단간 실행은 별도 작업으로 남아 있다.
 - 이미지 생성을 포함하는 신규 파일럿과 전체 실험은 별도 experiment ID와 config를 사용한다.
 - 사람평가와 전체 호출이 끝나지 않았으므로 현재 부분 결과를 최종 결론이나 모델 순위로 간주하지 않는다.
 
@@ -133,7 +136,7 @@ sbatch slurm/run_local32b_pilot.sbatch
 sbatch slurm/run_local32b_full.sbatch
 ```
 
-2026-11-25에 시작한 기존 393/2,100건 실행은 설정 SHA를 보존하기 위해 이미지 생성 설정을 추가하지 않았다. 그 실행만 `sbatch slurm/resume_local32b_20261125.sbatch`로 재개한다. 신규 실행은 위의 `*_imagegen.yaml` 설정을 사용한다.
+2026-11-25에 시작한 기존 2,100건 실행은 설정 SHA를 보존하기 위해 이미지 생성 설정을 추가하지 않았다. 그 실행만 `sbatch slurm/resume_local32b_20261125.sbatch`로 재개한다. 신규 실행은 위의 `*_imagegen.yaml` 설정을 사용한다.
 
 원형 충실도 역할·이미지 생성 실행은 `full` 설치 후 수행한다.
 

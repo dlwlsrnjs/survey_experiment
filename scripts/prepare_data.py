@@ -66,6 +66,20 @@ def prepare_memjack(root: Path, spec: dict) -> dict:
     return {"repo_id": spec["repo_id"], "revision": spec["revision"], "path": str(destination)}
 
 
+def prepare_hades(root: Path, spec: dict) -> dict:
+    from huggingface_hub import snapshot_download
+
+    destination = root / "data/raw/hades"
+    destination.mkdir(parents=True, exist_ok=True)
+    snapshot_download(
+        repo_id=spec["repo_id"], repo_type=spec["repo_type"], revision=spec["revision"],
+        local_dir=str(destination), allow_patterns=list(spec["files"]),
+    )
+    for relative, expected in spec["files"].items():
+        require_hash(destination / relative, expected)
+    return {"repo_id": spec["repo_id"], "revision": spec["revision"], "path": str(destination)}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Download and verify experiment datasets")
     parser.add_argument("--root", type=Path, required=True)
@@ -74,6 +88,7 @@ def main() -> int:
     root = args.root.resolve()
     lock = json.loads(args.lock.read_text(encoding="utf-8"))
     results = {
+        "hades": prepare_hades(root, lock["datasets"]["hades"]),
         "mm_safetybench": prepare_mm(root, lock["datasets"]["mm_safetybench_images"]),
         "memjack": prepare_memjack(root, lock["datasets"]["memjack"]),
     }

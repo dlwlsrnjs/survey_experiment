@@ -10,6 +10,15 @@
     {"name": "MemJack", "url": "https://github.com/JianhaoChen2025/MemJack.git", "revision": "a8d8a83378afe18bffce04b28d530a423d31508d"}
   ],
   "datasets": {
+    "hades": {
+      "repo_id": "Monosail/HADES",
+      "repo_type": "dataset",
+      "revision": "8c7388c566c8844a0732a2ad2156b72ae00c92c8",
+      "files": {
+        "data/test-00000-of-00002.parquet": "edd1d1fcb6e24fe6da42be3e724994cd7fb98570ed7b4817eb7f8e2521cb506b",
+        "data/test-00001-of-00002.parquet": "a5b2b289384a17fd1bdb5ea51c996c7b9906980b6e24fefdfd8cd2a24c0d2d7e"
+      }
+    },
     "mm_safetybench_images": {
       "source": "google_drive",
       "file_id": "1xjW9k-aGkmwycqGCXbru70FaSKhSDcR_",
@@ -57,6 +66,7 @@
     },
     {"repo_id": "PixArt-alpha/PixArt-XL-2-1024-MS", "revision": "b89adadeccd9ead2adcb9fa2825d3fabec48d404", "role": "HADES:image_generator", "profiles": ["full"]},
     {"repo_id": "liuhaotian/llava-v1.5-7b", "revision": "4481d270cc22fd5c4d1bb5df129622006ccd9234", "role": "HADES:image_captioner_and_target", "profiles": ["full"]},
+    {"repo_id": "openai/clip-vit-large-patch14-336", "revision": "ce19dc912ca5cd21c8a653c79e251e808ccabcd1", "role": "HADES:LLaVA_vision_tower", "profiles": ["full"]},
     {"repo_id": "PKU-Alignment/beaver-dam-7b", "revision": "3a5b70888869f04336d0d8344185ed74268ef896", "role": "HADES:final_safety_evaluator", "profiles": ["full"]},
     {"repo_id": "stabilityai/stable-diffusion-3-medium-diffusers", "revision": "ea42f8cef0f178587cf766dc8129abd379c90671", "role": "HIMRD:image_generator:gated", "profiles": ["full"]},
     {"repo_id": "llava-hf/llava-v1.6-mistral-7b-hf", "revision": "2424fdd47412fccc66d91719126b420e9fbd7065", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
@@ -68,6 +78,9 @@
     {"repo_id": "Vision-CAIR/MiniGPT-4", "revision": "e427c1915f6e23c054279dc42d3a743907e6ec47", "role": "HIMRD:code_and_config_only", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen3-VL-4B-Instruct", "revision": "ebb281ec70b05090aa6165b016eac8ec08e71b17", "role": "MM-Plan:original_base_planner", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen2.5-VL-7B-Instruct", "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5", "role": "controlled_comparison:fixed_target_vlm", "profiles": ["full"]},
-    {"repo_id": "Qwen/Qwen3-VL-Embedding-8B", "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7", "role": "MemJack:embedding", "profiles": ["full"]}
+    {"repo_id": "Qwen/Qwen3-VL-Embedding-8B", "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7", "role": "MemJack:embedding", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3-VL-8B-Instruct", "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b", "role": "MemJack:planner_attacker_reflection_and_local_victim", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3Guard-Gen-8B", "revision": "4505cb1a6f1864f21f8b27f7daf1b9a1aab6edbb", "role": "MemJack:safety_guard", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3-8B", "revision": "b968826d9c46dd6066d109eabc6255188de91218", "role": "MemJack:config_legacy_llm_path", "profiles": ["full"]}
   ]
 }

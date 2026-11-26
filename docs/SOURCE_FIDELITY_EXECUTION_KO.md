@@ -67,3 +67,15 @@ Slurm `59810`은 HIMRD 원 SafeBench의 앞 200개 고유 목표를 대상으로
 7. 이해 실패는 prefix, 이해했지만 공격 실패한 사례는 suffix를 최대 5회 조건부 수정
 
 H200 제출 파일은 `slurm/run_himrd_end_to_end_h200.sbatch`다. 2026-11-26 Hugging Face gated 접근 승인 후 SD3 고정 revision의 38개 파일, 약 15GB를 내려받았고 오프라인 snapshot 해석과 필수 구성요소 검사를 통과했다. 1건 smoke는 Slurm `59824`, smoke 성공 후 시작하는 200건 본 작업은 `59825`다. 본 작업은 `afterok:59824` 의존성을 사용하므로 smoke가 실패하면 자동으로 실행되지 않는다.
+
+## 논문별 원형 충실도 실행 상태
+
+| 기법 | 현재 사용하는 원 구성 | 실행 상태 | 아직 원형과 다른 부분 |
+|---|---|---|---|
+| FigStep | 공식 SafeBench 이미지·공식 incitement prompt·LLaVA-1.5-7B | smoke `59828`, 성공 후 200건 `59829` | 논문과 동일하게 사람 판정이 필요하므로 GPU 응답 완료만으로 ASR을 확정하지 않음 |
+| HADES | 공식 공개 최적화 이미지 0–5단계·LLaVA-1.5-7B·Beaver-Dam-7B | smoke `59826`, 성공 후 200목표×6단계(1,200행) `59830` | 공개 산출물 평가 트랙이며 PixArt/GPT로 이미지를 새로 생성하는 재생성 실험은 별도 |
+| HIMRD | GPT 역할만 GPT-4o mini로 치환, SD3 Medium·LLaVA-v1.6-Mistral-7B·HarmBench-Mistral-7B | smoke `59824`, 성공 후 200건 `59825` | 원 GPT-4o/o1 역할을 GPT-4o mini로 통일했고 SD3 single-file 대신 고정 Diffusers revision 사용 |
+| MM-Plan | Qwen3-VL-4B base planner와 공개 executor 코드 준비 | 미제출 | VE-Safety DUA 접근이 현재 403이며 논문 학습 완료 planner checkpoint도 미공개 |
+| MemJack | Qwen3-VL-8B·Qwen3Guard-Gen-8B·Qwen3-VL-Embedding-8B 및 공식 궤적 준비 | 32B 역할 재생만 실행 중 | 원 멀티에이전트·로컬 victim·guard·reflection·memory의 전체 loop는 아직 미제출 |
+
+FigStep/HADES/HIMRD의 smoke가 실패하면 연결된 본 작업은 시작하지 않는다. 실패 로그를 고친 뒤 새 smoke ID로 재검증한다. MM-Plan 데이터 접근 요청은 `https://huggingface.co/datasets/zybeich/VE-Safety`에서 별도로 승인받아야 한다.
