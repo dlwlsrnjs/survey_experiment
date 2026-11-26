@@ -1,8 +1,8 @@
 # 세션 인수인계: 현재 상태와 다음 작업
 
-마지막 점검: **2026-11-26 10:39 KST**
+마지막 점검: **2026-11-26 12:00 KST**
 
-이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구의 논문 연결은 `docs/SURVEY_TO_EXPERIMENT_KO.md`, 구체적인 설계와 분석 원칙은 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
+이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구의 논문 연결은 `docs/SURVEY_TO_EXPERIMENT_KO.md`, 모델급·역할별 평가 기준은 `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`, 구체적인 실행 설계는 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
 
 새 머신에서는 `docs/SETUP_KO.md`와 `./bootstrap.sh --profile core`를 사용한다. 원형 충실도용 추가 모델까지 필요하면 `--profile full`을 사용한다. 외부 저장소·데이터·모델 revision과 checksum은 `configs/assets.lock.json`, 이미지 생성 설정은 `configs/image_generators.yaml`이 기준이다.
 
@@ -40,14 +40,15 @@ Slurm job `59571`은 2026-11-25 16:48 KST경 사용자 취소로 종료됐다. �
 
 `summary.json`은 2026-11-26 인수인계 과정에서 원시 393건을 기준으로 다시 생성했다. 하지만 experience 조건은 repeat 0의 앞부분만 포함하므로 이 수치로 A/B/C/C_random을 비교하거나 최종 결론을 내리면 안 된다.
 
-### 별도 환경 작업
+### Slurm 및 별도 환경 작업
 
-2026-11-26 10:39 KST 점검 당시 아래 작업이 실행 중이었다.
+2026-11-26 12:00 KST 기준 상태는 다음과 같다.
 
-- `59725 vlmaux-models`: 추가 모델 다운로드
-- `59726 vlmaux-envs`: modern/legacy VLM 환경 구성
+- `59780 vlmaux32b-resume`: `PENDING (Priority)`. 기존 393건 이후의 32B 전체 실행 재개 작업이다.
+- `59726 vlmaux-envs`: `COMPLETED`. modern/legacy VLM 환경 구성이 끝났다.
+- `59725 vlmaux-models`: `FAILED`, exit code `2:0`. 여러 모델 파일의 다운로드 진행 기록은 남아 있지만 완료 검증은 통과하지 못한 상태로 취급한다. 로그와 `doctor` 결과를 확인하기 전에는 전체 모델 설치가 끝났다고 간주하지 않는다.
 
-이 둘은 source-fidelity 후속 실행 준비 작업이다. 상태는 반드시 다시 확인한다.
+source-fidelity 후속 실행 전에 상태를 반드시 다시 확인한다.
 
 ```bash
 squeue -u "$USER" -o '%.18i %.20j %.2t %.10M %.6D %R'
@@ -136,6 +137,7 @@ python3 -m survey_exp.annotation \
 |---|---|
 | 프로젝트 시작점 | `README.md` |
 | 서베이–실험 연결과 연구 의도 | `docs/SURVEY_TO_EXPERIMENT_KO.md` |
+| 모델급·의도 노출·역할별 지표·비용 | `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md` |
 | 연구 설계·중간작업 분석 | `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md` |
 | 원형 보존/변형 경계 | `docs/PROTOCOL_ADHERENCE_KO.md` |
 | 공개 코드 대응 | `docs/CODE_ANALYSIS_KO.md` |
@@ -156,4 +158,4 @@ python3 -m survey_exp.annotation \
 
 ## 7. 새 세션에 바로 붙여 넣을 요청문
 
-> `/home/ljk98/survey_experiment`의 작업을 이어서 진행해줘. 먼저 `AGENTS.md`, `docs/SURVEY_TO_EXPERIMENT_KO.md`, `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`, `docs/SESSION_HANDOFF_KO.md`를 읽고 Git/Slurm/원시 출력 건수를 확인해. 기존 실행 파일을 삭제하거나 덮어쓰지 말고, 문서의 완료 조건과 분석 경계를 지켜서 남은 작업을 진행해줘.
+> `/home/ljk98/survey_experiment`의 작업을 이어서 진행해줘. 먼저 `AGENTS.md`, `docs/SURVEY_TO_EXPERIMENT_KO.md`, `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`, `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`, `docs/SESSION_HANDOFF_KO.md`를 읽고 Git/Slurm/원시 출력 건수를 확인해. 기존 실행 파일을 삭제하거나 덮어쓰지 말고, 문서의 완료 조건과 분석 경계를 지켜서 남은 작업을 진행해줘.
