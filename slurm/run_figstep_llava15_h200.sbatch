@@ -27,8 +27,9 @@ export PYTHONPATH="$PROJECT_ROOT:$PROJECT_ROOT/third_party/HADES/eval/evaluate/i
 FIGSTEP_LIMIT=${FIGSTEP_LIMIT:-200}
 FIGSTEP_OUTPUT_DIR=${FIGSTEP_OUTPUT_DIR:-$PROJECT_ROOT/runs/figstep_llava15_200_20261126}
 LLAVA_PATH="$HF_HOME/hub/models--liuhaotian--llava-v1.5-7b/snapshots/4481d270cc22fd5c4d1bb5df129622006ccd9234"
+CLIP_PATH="$HF_HOME/hub/models--openai--clip-vit-large-patch14-336/snapshots/ce19dc912ca5cd21c8a653c79e251e808ccabcd1"
 cd "$PROJECT_ROOT"
 "$PROJECT_ROOT/.venvs/legacy-vlm/bin/python" -m survey_exp.figstep_eval \
   --manifest "$PROJECT_ROOT/data/manifests/figstep_safebench_200.jsonl" \
   --output-dir "$FIGSTEP_OUTPUT_DIR" --limit "$FIGSTEP_LIMIT" \
-  --llava-path "$LLAVA_PATH"
+  --llava-path "$LLAVA_PATH" --clip-path "$CLIP_PATH"

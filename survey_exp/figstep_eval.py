@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-from .hades_released_eval import LLAVA_ROOT, ROOT, _llava_response
+from .hades_released_eval import LLAVA_ROOT, ROOT, _llava_response, prepare_llava_overlay
 from .util import append_jsonl, atomic_write_text, read_jsonl, sha256_file, utc_now
 
 
@@ -31,8 +31,11 @@ def run(args: argparse.Namespace) -> None:
         "generation_settings": {"do_sample": True, "temperature": 0.2, "max_new_tokens": 1024},
     }
     atomic_write_text(output_dir / "provenance.json", json.dumps(provenance, ensure_ascii=False, indent=2) + "\n")
+    llava_path = prepare_llava_overlay(
+        args.llava_path, args.clip_path, output_dir / "_llava_local_overlay",
+    )
     tokenizer, model, image_processor, _ = load_pretrained_model(
-        str(args.llava_path.resolve()), None, "llava-v1.5-7b", device_map="auto",
+        str(llava_path), None, "llava-v1.5-7b", device_map="auto",
     )
     model.eval()
     for index, row in enumerate(rows, 1):
@@ -76,6 +79,7 @@ def main() -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=200)
     parser.add_argument("--llava-path", type=Path, required=True)
+    parser.add_argument("--clip-path", type=Path, required=True)
     parser.add_argument("--llava-revision", default="4481d270cc22fd5c4d1bb5df129622006ccd9234")
     parser.add_argument("--clip-revision", default="ce19dc912ca5cd21c8a653c79e251e808ccabcd1")
     run(parser.parse_args())

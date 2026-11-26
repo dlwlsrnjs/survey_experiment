@@ -18,6 +18,30 @@ LLAVA_ROOT = ROOT / "third_party/HADES/eval/evaluate/inference"
 HADES_ROOT = ROOT / "third_party/HADES"
 
 
+def prepare_llava_overlay(llava_path: Path, clip_path: Path, overlay_path: Path) -> Path:
+    """Create a local LLaVA view whose vision tower uses the pinned CLIP snapshot."""
+    llava_path = llava_path.resolve()
+    clip_path = clip_path.resolve()
+    if not (llava_path / "config.json").is_file():
+        raise FileNotFoundError(f"missing LLaVA config: {llava_path / 'config.json'}")
+    if not (clip_path / "config.json").is_file():
+        raise FileNotFoundError(f"missing CLIP config: {clip_path / 'config.json'}")
+    overlay_path.mkdir(parents=True, exist_ok=True)
+    for source in llava_path.iterdir():
+        if source.name == "config.json":
+            continue
+        destination = overlay_path / source.name
+        if destination.exists() or destination.is_symlink():
+            if destination.resolve() != source.resolve():
+                raise RuntimeError(f"overlay path points at unexpected source: {destination}")
+            continue
+        destination.symlink_to(source.resolve(), target_is_directory=source.is_dir())
+    config = json.loads((llava_path / "config.json").read_text(encoding="utf-8"))
+    config["mm_vision_tower"] = str(clip_path)
+    atomic_write_text(overlay_path / "config.json", json.dumps(config, ensure_ascii=False, indent=2) + "\n")
+    return overlay_path
+
+
 def _state_path(output_dir: Path, source_id: str) -> Path:
     return output_dir / "states" / f"{source_id}.json"
 
@@ -94,7 +118,9 @@ def run(args: argparse.Namespace) -> None:
         state = json.loads(path.read_text(encoding="utf-8")) if path.exists() else dict(row)
         states.append(state)
 
-    llava_path = args.llava_path.resolve()
+    llava_path = prepare_llava_overlay(
+        args.llava_path, args.clip_path, output_dir / "_llava_local_overlay",
+    )
     tokenizer, model, image_processor, _ = load_pretrained_model(
         str(llava_path), None, "llava-v1.5-7b", device_map="auto",
     )
@@ -156,6 +182,7 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=200)
     parser.add_argument("--judge-batch-size", type=int, default=4)
     parser.add_argument("--llava-path", type=Path, required=True)
+    parser.add_argument("--clip-path", type=Path, required=True)
     parser.add_argument("--beaver-path", type=Path, required=True)
     parser.add_argument("--llava-revision", default="4481d270cc22fd5c4d1bb5df129622006ccd9234")
     parser.add_argument("--clip-revision", default="ce19dc912ca5cd21c8a653c79e251e808ccabcd1")

@@ -169,14 +169,14 @@ python3 -m survey_exp.annotation \
 - 기존 장면 설명 200건은 직접 재사용한다. 기존 prefix/suffix는 실제 VLM 응답 전 결과이므로 첫 반복 후보로만 사용한다.
 - LLaVA와 `cais/HarmBench-Mistral-7b-val-cls` 가중치는 `$HOME/.cache/huggingface`에 완전하다.
 - SD3 Medium gated 접근이 승인됐고 고정 revision `ea42f8cef0f178587cf766dc8129abd379c90671`의 38개 파일, 약 15GB 다운로드와 오프라인 해석 검증이 완료됐다.
-- H200 1건 smoke는 Slurm `59824`, smoke 성공 후 자동 시작할 200건 본 작업은 `59825`다. `59825`는 `afterok:59824` 의존성을 사용한다.
+- 최초 smoke `59824`는 SentencePiece/Protobuf 불일치로 실패했다. SentencePiece 0.2.0 고정 후 재제출한 smoke는 `59834`, 성공 후 자동 시작할 200건 본 작업은 `59835`다.
 - smoke 출력은 `runs/himrd_e2e_llava16_smoke1_20261126`, 본 출력은 `runs/himrd_e2e_llava16_200_20261126`이다.
 
 ## 9. 2026-11-26 다른 원형 충실도 작업
 
 - HADES 공식 데이터 revision `8c7388c566c8844a0732a2ad2156b72ae00c92c8`의 4,500행을 내려받았다. 5개 scenario에서 40개 목표씩, 각 0–5단계 이미지를 포함한 1,200행 manifest는 `data/manifests/hades_released_200.jsonl`이다.
-- HADES 원 LLaVA-1.5-7B + Beaver-Dam-7B smoke는 `59826`, 성공 후 200목표×6단계(1,200행) 본 작업은 `59830`이다. 처음 제출한 `59827`은 200행으로 잘못 제한되어 시작 전에 취소·교체했다.
-- FigStep 공식 SafeBench에서 범주별 20개씩 뽑은 200행 manifest는 `data/manifests/figstep_safebench_200.jsonl`이다. LLaVA-1.5-7B smoke는 `59828`, 성공 후 본 작업은 `59829`다.
+- HADES 최초 smoke `59826`은 오프라인 CLIP 경로 해석 실패로 종료됐다. LLaVA config에 고정 local CLIP snapshot을 주입하는 overlay를 적용한 새 smoke는 `59836`, 성공 후 200목표×6단계(1,200행) 본 작업은 `59837`이다.
+- FigStep 공식 SafeBench에서 범주별 20개씩 뽑은 200행 manifest는 `data/manifests/figstep_safebench_200.jsonl`이다. 같은 local CLIP overlay를 적용한 smoke는 `59838`, 성공 후 본 작업은 `59839`다.
 - FigStep 주 평가는 논문처럼 사람 판정이다. `completed.json`의 응답 완료와 ASR 확정을 혼동하지 않는다.
 - MM-Plan VE-Safety는 현재 Hugging Face 계정에서 `test.parquet` 다운로드가 HTTP 403이다. DUA 접근 승인이 필요하다.
-- MemJack 전체 원형 종단간 작업은 아직 제출하지 않았다. 논문 victim `Qwen3-VL-Plus`는 폐쇄형이고, 고정 공식 revision에는 `main.py`가 요구하는 `configs/safety_policy.txt`가 없다. 임의 정책을 원형으로 둔갑시키지 말고 저자 공개/확보 뒤 실행한다. 공개 local backend의 Qwen3-VL-8B 조건은 별도 대체 트랙이다. 2026-11-26 07:05 UTC 기준 32B 역할 재생은 1,915/2,100건(91.2%)이었다.
+- MemJack 전체 원형 종단간 작업은 아직 제출하지 않았다. 논문 victim `Qwen3-VL-Plus`는 폐쇄형이고, 고정 공식 revision에는 `main.py`가 요구하는 `configs/safety_policy.txt`가 없다. 임의 정책을 원형으로 둔갑시키지 말고 저자 공개/확보 뒤 실행한다. 공개 local backend의 Qwen3-VL-8B 조건은 별도 대체 트랙이다. 32B 역할 재생은 2026-11-26 07:28 UTC에 2,100/2,100건으로 완료됐다.

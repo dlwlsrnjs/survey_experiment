@@ -25,9 +25,10 @@ export TOKENIZERS_PARALLELISM=false
 export PYTHONUNBUFFERED=1
 export PYTHONPATH="$PROJECT_ROOT:$PROJECT_ROOT/third_party/HADES:$PROJECT_ROOT/third_party/HADES/eval/evaluate/inference${PYTHONPATH:+:$PYTHONPATH}"
 
-HADES_LIMIT=${HADES_LIMIT:-1200}
+HADES_LIMIT=${HADES_LIMIT:-200}
 HADES_OUTPUT_DIR=${HADES_OUTPUT_DIR:-$PROJECT_ROOT/runs/hades_released_llava15_200goals_1200rows_20261126}
 LLAVA_PATH="$HF_HOME/hub/models--liuhaotian--llava-v1.5-7b/snapshots/4481d270cc22fd5c4d1bb5df129622006ccd9234"
+CLIP_PATH="$HF_HOME/hub/models--openai--clip-vit-large-patch14-336/snapshots/ce19dc912ca5cd21c8a653c79e251e808ccabcd1"
 BEAVER_PATH="$HF_HOME/hub/models--PKU-Alignment--beaver-dam-7b/snapshots/3a5b70888869f04336d0d8344185ed74268ef896"
 
 cd "$PROJECT_ROOT"
@@ -36,4 +37,5 @@ cd "$PROJECT_ROOT"
   --output-dir "$HADES_OUTPUT_DIR" \
   --limit "$HADES_LIMIT" \
   --llava-path "$LLAVA_PATH" \
+  --clip-path "$CLIP_PATH" \
   --beaver-path "$BEAVER_PATH"
