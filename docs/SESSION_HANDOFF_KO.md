@@ -205,3 +205,12 @@ python3 -m survey_exp.annotation \
 - generation 거부와 VLM 표적 역할은 별개이므로, 준비된 실제 benchmark로 표적 VLM 성능을 먼저 측정한다. `survey_exp/vlm_benchmark_eval.py`는 FigStep 200목표, HADES 고정 step 5의 200목표, 기존 HIMRD SD3 이미지·고정 prompt 200목표를 새 디렉터리에 기록한다.
 - Slurm `59955`는 위 600건을 한 번의 H200 모델 적재로 순차 실행한다. 출력은 각각 `runs/open_best_qwen3vl30b_figstep200_20261127`, `runs/open_best_qwen3vl30b_hades_step5_200_20261127`, `runs/open_best_qwen3vl30b_himrd200_20261127`이다.
 - 이 600건은 가능한 구성요소의 부분 평가다. 자동 거부율과 응답 완료율은 보고할 수 있지만, 사람평가 전 ASR 또는 5개 기법 전역 최적 조합으로 표현하지 않는다.
+
+### 전체 후보 실행 큐
+
+- `59958`은 `open_best` profile의 revision 고정 자산 16개를 최대 동시 2개로 내려받는 Slurm array다. 모델별 결과는 `runs/open_best_download_status/task-XX.json`에 남는다.
+- VLM 600건: Qwen Instruct `59957`, Qwen Thinking `59962`, InternVL `59963`, Mistral Small `59964`, Gemma 3 `59965`, GLM-4.5V 2×H200 상한 `59966`.
+- LLM 텍스트 역할 200목표: gpt-oss `59967`, Qwen3 `59968`, Mistral Small `59969`, Gemma 3 `59970`, Llama 3.3 2×H200 `59971`. HADES caption/diffusion-prompt와 HIMRD scene/prefix/suffix의 5개 역할, 총 1,000레코드를 모델마다 계획한다. 이미지 생성은 이 단계에서 끈다.
+- 이미지 생성기 200 prompt: Qwen-Image-2512 `59972`, Qwen-Image-2.1 `59973`, SD3.5 Large `59974`, FLUX.1-dev `59975`, PixArt Sigma `59976`. 공통 입력은 `data/manifests/open_best_image_prompts_200.jsonl`이다.
+- 모든 평가 작업은 대응 다운로드 array element의 `afterok` 의존성을 갖는다. gated 접근 실패 또는 로더 비호환은 해당 작업만 실패하며, 성공한 다른 모델의 원시 결과를 삭제하지 않는다.
+- 위 작업은 구성요소별 전수 평가다. 125개 조합의 end-to-end 본선은 MM-Plan·MemJack을 포함한 다섯 방법의 200개 고정 pool과 구성요소 gate가 모두 준비된 뒤 별도 제출한다.

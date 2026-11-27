@@ -26,6 +26,7 @@ class Engine:
         import torch
         from transformers import (
             AutoConfig,
+            AutoModelForImageTextToText,
             AutoProcessor,
             Qwen2_5_VLForConditionalGeneration,
             Qwen3VLForConditionalGeneration,
@@ -44,9 +45,9 @@ class Engine:
             "Qwen2_5_VLForConditionalGeneration": Qwen2_5_VLForConditionalGeneration,
             "Qwen3VLForConditionalGeneration": Qwen3VLForConditionalGeneration,
             "Qwen3VLMoeForConditionalGeneration": Qwen3VLMoeForConditionalGeneration,
-        }.get(architecture)
-        if model_class is None:
-            raise ValueError(f"Unsupported local VLM architecture: {architecture}")
+        }.get(architecture, AutoModelForImageTextToText)
+        self.qwen_family = architecture.startswith("Qwen")
+        self.architecture = architecture
         self.model = model_class.from_pretrained(
             model_id,
             revision=revision,
@@ -75,15 +76,38 @@ class Engine:
         return converted
 
     def complete(self, payload: dict[str, Any]) -> dict[str, Any]:
-        from qwen_vl_utils import process_vision_info
-
         messages = self._messages(payload)
-        prompt = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        image_inputs, video_inputs = process_vision_info(messages)
-        inputs = self.processor(
-            text=[prompt], images=image_inputs, videos=video_inputs,
-            padding=True, return_tensors="pt",
-        ).to(self.model.device)
+        if self.qwen_family:
+            from qwen_vl_utils import process_vision_info
+
+            prompt = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            image_inputs, video_inputs = process_vision_info(messages)
+            inputs = self.processor(
+                text=[prompt], images=image_inputs, videos=video_inputs,
+                padding=True, return_tensors="pt",
+            ).to(self.model.device)
+        else:
+            try:
+                inputs = self.processor.apply_chat_template(
+                    messages,
+                    add_generation_prompt=True,
+                    tokenize=True,
+                    return_dict=True,
+                    return_tensors="pt",
+                ).to(self.model.device)
+            except (TypeError, ValueError):
+                prompt = self.processor.apply_chat_template(
+                    messages, tokenize=False, add_generation_prompt=True,
+                )
+                images = [
+                    part["image"]
+                    for message in messages
+                    for part in message.get("content", [])
+                    if isinstance(part, dict) and part.get("type") == "image"
+                ]
+                inputs = self.processor(
+                    text=[prompt], images=images or None, padding=True, return_tensors="pt",
+                ).to(self.model.device)
         max_tokens = int(payload.get("max_tokens", 1200))
         temperature = float(payload.get("temperature", 0.0))
         seed = int(payload.get("seed", 20261125))
@@ -108,6 +132,7 @@ class Engine:
             "object": "chat.completion",
             "created": int(time.time()),
             "model": self.model_id,
+            "architecture": self.architecture,
             "choices": [{"index": 0, "message": {"role": "assistant", "content": text}, "finish_reason": finish_reason}],
             "usage": {
                 "prompt_tokens": prompt_tokens,
