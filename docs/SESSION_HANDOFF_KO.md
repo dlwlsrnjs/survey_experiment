@@ -197,3 +197,11 @@ python3 -m survey_exp.annotation \
 - 현재 FigStep·HADES·HIMRD는 200개 이상 실제 benchmark 목표가 준비됐다. MM-Plan은 VE-Safety DUA 다운로드 403 때문에, MemJack은 공개 궤적의 원본 이미지 경로가 배포 환경의 절대경로이고 local victim 원형 파일이 불완전하기 때문에 본선 manifest를 아직 동결하지 않았다.
 - Slurm `59949`는 `Qwen/Qwen3-VL-30B-A3B-Instruct` 고정 revision 다운로드, `59950`은 성공 의존 H200 10건 건강검사, `59951`은 자동 gate다. 이 10건은 모델 적재·형식·거부 상태만 확인하며 순위 데이터가 아니다.
 - 본선 제출 전 `configs/open_best_protocol.yaml`의 데이터 pool 5개, 이미지 존재, matrix checksum, candidate cache, gated 라이선스 접근을 모두 확인한다. 일부 기법만으로 전역 순위를 내지 않는다.
+
+### 먼저 실행 가능한 부분 비교
+
+- `59949` 다운로드와 `59950` 10건 건강검사는 완료됐다. 오류 0, 형식 유효 10/10, 길이 종료 0이지만 generation 역할은 10/10 구조화된 거부여서 generation gate를 통과하지 못했다.
+- 최초 gate `59951`의 실패 원인은 모델 결과가 아니라 `scripts/check_thinking_smoke.py`의 import 경로였다. 스크립트 경로를 보정한 뒤 동일 원시 출력으로 다시 계산해 위 결과를 확인했다.
+- generation 거부와 VLM 표적 역할은 별개이므로, 준비된 실제 benchmark로 표적 VLM 성능을 먼저 측정한다. `survey_exp/vlm_benchmark_eval.py`는 FigStep 200목표, HADES 고정 step 5의 200목표, 기존 HIMRD SD3 이미지·고정 prompt 200목표를 새 디렉터리에 기록한다.
+- Slurm `59955`는 위 600건을 한 번의 H200 모델 적재로 순차 실행한다. 출력은 각각 `runs/open_best_qwen3vl30b_figstep200_20261127`, `runs/open_best_qwen3vl30b_hades_step5_200_20261127`, `runs/open_best_qwen3vl30b_himrd200_20261127`이다.
+- 이 600건은 가능한 구성요소의 부분 평가다. 자동 거부율과 응답 완료율은 보고할 수 있지만, 사람평가 전 ASR 또는 5개 기법 전역 최적 조합으로 표현하지 않는다.
