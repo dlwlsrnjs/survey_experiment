@@ -82,9 +82,14 @@ def run(args: argparse.Namespace) -> Path:
     provenance_path = output_dir / "provenance.json"
     if provenance_path.exists():
         previous = json.loads(provenance_path.read_text(encoding="utf-8"))
-        for key in ("image_runs", "model", "fixed_target_prompts", "himrd_target_prompt_uses_same_llm_prefix_and_suffix"):
+        for key in ("image_runs", "fixed_target_prompts", "himrd_target_prompt_uses_same_llm_prefix_and_suffix"):
             if previous.get(key) != provenance.get(key):
                 raise ValueError(f"Resume provenance mismatch: {key}")
+        previous_model = previous.get("model", {})
+        current_model = provenance["model"]
+        for key in ("model", "revision", "temperature", "seed", "max_tokens"):
+            if previous_model.get(key) != current_model.get(key):
+                raise ValueError(f"Resume model provenance mismatch: {key}")
     else:
         atomic_write_text(provenance_path, json.dumps(provenance, indent=2) + "\n")
 
