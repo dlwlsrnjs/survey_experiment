@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 
 from scripts.build_open_best_matrix import build
+from scripts.download_open_best_asset import assets
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,6 +47,11 @@ class OpenBestProtocolTests(unittest.TestCase):
         for family in ("vlm_candidates", "llm_candidates", "image_generator_candidates"):
             for model in candidates[family]:
                 self.assertIn((model["repo_id"], model["revision"]), locked)
+
+    def test_download_array_covers_every_open_best_asset(self):
+        selected = assets(ROOT / "configs/assets.lock.json")
+        self.assertEqual(len(selected), 16)
+        self.assertEqual(len({(item["repo_id"], item["revision"]) for item in selected}), 16)
 
 
 if __name__ == "__main__":
