@@ -7,7 +7,7 @@ if [[ "$CONFIG" != /* ]]; then
   CONFIG="$PROJECT_ROOT/$CONFIG"
 fi
 PYTHON_BIN=${PYTHON_BIN:-$PROJECT_ROOT/.venvs/modern/bin/python}
-PORT=${PORT:-8000}
+PORT=${PORT:-$((20000 + ${SLURM_JOB_ID:-0} % 30000))}
 export HF_HOME=${HF_HOME:-$PROJECT_ROOT/.cache/huggingface}
 export PYTHONPATH="$PROJECT_ROOT${PYTHONPATH:+:$PYTHONPATH}"
 export TOKENIZERS_PARALLELISM=false

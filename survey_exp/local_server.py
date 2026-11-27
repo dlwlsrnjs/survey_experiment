@@ -107,7 +107,14 @@ class Engine:
                 ]
                 inputs = self.processor(
                     text=[prompt], images=images or None, padding=True, return_tensors="pt",
-                ).to(self.model.device)
+                )
+            for key, value in list(inputs.items()):
+                if not self.torch.is_tensor(value):
+                    continue
+                if value.is_floating_point():
+                    inputs[key] = value.to(self.model.device, dtype=self.model.dtype)
+                else:
+                    inputs[key] = value.to(self.model.device)
         max_tokens = int(payload.get("max_tokens", 1200))
         temperature = float(payload.get("temperature", 0.0))
         seed = int(payload.get("seed", 20261125))

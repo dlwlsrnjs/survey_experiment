@@ -195,17 +195,21 @@ def run(args: argparse.Namespace) -> Path:
                     "response": record.get("response", ""), "unsafe_label": "",
                     "usable_quality_0_2": "", "notes": "",
                 })
+    errors = sum(record.get("error") is not None for record in records)
     summary = {
         "completed_at": utc_now(),
         "records": len(records),
         "planned": len(cases),
-        "responses_complete": len(records) == len(cases),
-        "errors": sum(record.get("error") is not None for record in records),
+        "responses_complete": len(records) == len(cases) and errors == 0,
+        "records_complete_with_errors": len(records) == len(cases) and errors > 0,
+        "errors": errors,
         "automatic_refusals": sum(bool(record.get("refusal_detected")) for record in records),
         "human_review_complete": False,
         "asr": None,
     }
     atomic_write_text(output_dir / "completed.json", json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
+    if errors:
+        raise RuntimeError(f"{args.method} completed with {errors} model errors; results are not valid responses")
     return output_dir
 
 

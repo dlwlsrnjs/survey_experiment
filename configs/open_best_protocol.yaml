@@ -28,6 +28,9 @@ combination_search:
   minimum_image_generators: 5
   minimum_combinations: 100
   planned_factorial_combinations: 125
+  expanded_registry_combinations: 216
+  currently_executable_expanded_combinations: 150
+  blocked_combinations_are_retained_with_reason: true
   groups_per_method_per_combination: 200
   methods_per_combination: 5
   planned_case_evaluations: 125000

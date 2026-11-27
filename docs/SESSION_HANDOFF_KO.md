@@ -214,3 +214,12 @@ python3 -m survey_exp.annotation \
 - 이미지 생성기 200 prompt: Qwen-Image-2512 `59972`, Qwen-Image-2.1 `59973`, SD3.5 Large `59974`, FLUX.1-dev `59975`, PixArt Sigma `59976`. 공통 입력은 `data/manifests/open_best_image_prompts_200.jsonl`이다.
 - 모든 평가 작업은 대응 다운로드 array element의 `afterok` 의존성을 갖는다. gated 접근 실패 또는 로더 비호환은 해당 작업만 실패하며, 성공한 다른 모델의 원시 결과를 삭제하지 않는다.
 - 위 작업은 구성요소별 전수 평가다. 125개 조합의 end-to-end 본선은 MM-Plan·MemJack을 포함한 다섯 방법의 200개 고정 pool과 구성요소 gate가 모두 준비된 뒤 별도 제출한다.
+
+### 최대 경우의 수 확장
+
+- 포트 8000 고정 때문에 같은 H200 노드의 서로 다른 작업이 잘못된 서버에 연결되는 문제가 확인됐다. Slurm job ID 기반 고유 포트로 수정했다.
+- Mistral·Gemma 최초 VLM 600건은 전부 HTTP 500이므로 유효 완료가 아니다. FP32 image tensor/BF16 weight 불일치도 수정했고 `60030`, `60031` retry에서 새 출력 디렉터리를 사용한다.
+- Qwen Thinking은 FigStep·HADES 완료 뒤 포트 충돌로 HIMRD 12건에서 중단됐다. `60029`가 세 기법 600건을 새 ID로 재실행한다.
+- GLM-4.5V 최초 2×H200 적재는 46 shard 중 28번째에서 비정상 종료됐다. `60032`는 4×H200·300GB RAM으로 재시도한다.
+- Llama 3.3과 SD3.5 Large는 현재 HF 계정에서 각각 403이다. 원 후보를 삭제하지 않고 Qwen3-32B와 이미 승인된 SD3 Medium을 실행 대체 후보로 추가했다. 다운로드 array `60027`, 후속 LLM `60036`, 이미지 `60037`이다.
+- 확장 행렬 `configs/open_best_combinations_expanded.jsonl`은 6×6×6=216개다. 현재 접근 가능한 실행 조합은 최대 6×5×5=150개이며, blocked 조합도 누락하지 않고 이유와 함께 집계한다.

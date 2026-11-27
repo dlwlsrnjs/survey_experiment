@@ -31,6 +31,14 @@ class OpenBestProtocolTests(unittest.TestCase):
             (ROOT / "configs/open_best_combinations.jsonl").read_bytes(),
         )
 
+    def test_expanded_factorial_covers_all_registered_families(self):
+        candidates = yaml.safe_load((ROOT / "configs/open_best_candidates.yaml").read_text())
+        factorial = candidates["combination_search"]["expanded_factorial"]
+        self.assertEqual(factorial["combinations"], 216)
+        payload, rows = build(ROOT / "configs/open_best_candidates.yaml", "expanded_factorial")
+        self.assertEqual(len(rows), 216)
+        self.assertEqual(payload, (ROOT / "configs/open_best_combinations_expanded.jsonl").read_bytes())
+
     def test_every_combination_has_two_hundred_cases_per_method(self):
         protocol = yaml.safe_load((ROOT / "configs/open_best_protocol.yaml").read_text())
         self.assertEqual(protocol["benchmark"]["groups_per_method"], 200)
@@ -50,8 +58,8 @@ class OpenBestProtocolTests(unittest.TestCase):
 
     def test_download_array_covers_every_open_best_asset(self):
         selected = assets(ROOT / "configs/assets.lock.json")
-        self.assertEqual(len(selected), 16)
-        self.assertEqual(len({(item["repo_id"], item["revision"]) for item in selected}), 16)
+        self.assertEqual(len(selected), 18)
+        self.assertEqual(len({(item["repo_id"], item["revision"]) for item in selected}), 18)
 
 
 if __name__ == "__main__":

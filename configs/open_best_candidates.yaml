@@ -76,6 +76,12 @@ llm_candidates:
     gated: true
     roles: [generation, rewrite, evaluation, experience_use]
     quantized_or_multi_gpu_track: true
+  - repo_id: Qwen/Qwen3-32B
+    revision: 9216db5781bf21249d130ec9da846c4624c16137
+    license: apache-2.0
+    hf_repository_size_gib: 61.04
+    roles: [generation, rewrite, evaluation, experience_use]
+    executable_fallback_for: meta-llama/Llama-3.3-70B-Instruct
 
 image_generator_candidates:
   - repo_id: Qwen/Qwen-Image-2512
@@ -108,6 +114,11 @@ image_generator_candidates:
     license: openrail++
     hf_repository_size_gib: 20.33
     roles: [text_to_image]
+  - repo_id: stabilityai/stable-diffusion-3-medium-diffusers
+    revision: ea42f8cef0f178587cf766dc8129abd379c90671
+    license: stability-community
+    roles: [text_to_image]
+    executable_fallback_for: stabilityai/stable-diffusion-3.5-large
 
 judge_candidates:
   - repo_id: cais/HarmBench-Mistral-7b-val-cls
@@ -163,6 +174,36 @@ combination_search:
       - PixArt-alpha/PixArt-Sigma-XL-2-1024-MS
     matrix: open_best_combinations.jsonl
     matrix_sha256: open_best_combinations.jsonl.sha256
+  expanded_factorial:
+    vlm_count: 6
+    llm_count: 6
+    image_generator_count: 6
+    combinations: 216
+    vlms:
+      - Qwen/Qwen3-VL-30B-A3B-Instruct
+      - OpenGVLab/InternVL3_5-38B-HF
+      - Qwen/Qwen3-VL-30B-A3B-Thinking
+      - mistralai/Mistral-Small-3.1-24B-Instruct-2503
+      - google/gemma-3-27b-it
+      - zai-org/GLM-4.5V
+    llms:
+      - openai/gpt-oss-120b
+      - Qwen/Qwen3-30B-A3B-Instruct-2507
+      - mistralai/Mistral-Small-3.1-24B-Instruct-2503
+      - google/gemma-3-27b-it
+      - meta-llama/Llama-3.3-70B-Instruct
+      - Qwen/Qwen3-32B
+    image_generators:
+      - Qwen/Qwen-Image-2512
+      - Qwen/Qwen-Image-2.1
+      - stabilityai/stable-diffusion-3.5-large
+      - black-forest-labs/FLUX.1-dev
+      - PixArt-alpha/PixArt-Sigma-XL-2-1024-MS
+      - stabilityai/stable-diffusion-3-medium-diffusers
+    matrix: open_best_combinations_expanded.jsonl
+    matrix_sha256: open_best_combinations_expanded.jsonl.sha256
+    blocked_candidates_remain_rows: true
+    executable_substitutions_are_reported_separately: true
   search_stage:
     combinations: 125
     cases_per_method: 200

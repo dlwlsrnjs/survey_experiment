@@ -21,9 +21,9 @@ def _sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
 
 
-def build(config_path: Path) -> tuple[bytes, list[dict[str, Any]]]:
+def build(config_path: Path, factorial_key: str = "primary_factorial") -> tuple[bytes, list[dict[str, Any]]]:
     config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    factorial = config["combination_search"]["primary_factorial"]
+    factorial = config["combination_search"][factorial_key]
     selected: dict[str, list[dict[str, Any]]] = {}
     for role, (candidate_key, selection_key) in FAMILIES.items():
         registry = {item["repo_id"]: item for item in config[candidate_key]}
@@ -66,8 +66,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Build the revision-pinned open-best factorial matrix")
     parser.add_argument("--config", type=Path, default=Path("configs/open_best_candidates.yaml"))
     parser.add_argument("--output", type=Path, default=Path("configs/open_best_combinations.jsonl"))
+    parser.add_argument("--factorial-key", default="primary_factorial")
     args = parser.parse_args()
-    payload, rows = build(args.config.resolve())
+    payload, rows = build(args.config.resolve(), args.factorial_key)
     args.output.write_bytes(payload)
     digest = _sha256_bytes(payload)
     args.output.with_suffix(args.output.suffix + ".sha256").write_text(

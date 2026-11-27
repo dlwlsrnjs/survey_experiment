@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=3-00:00:00
-#SBATCH --array=0-15%2
+#SBATCH --array=0-17%2
 #SBATCH --output=runs/slurm-%x-%A_%a.out
 #SBATCH --error=runs/slurm-%x-%A_%a.err
 set -euo pipefail

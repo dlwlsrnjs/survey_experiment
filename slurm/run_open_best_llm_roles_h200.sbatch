@@ -28,7 +28,7 @@ export LOCAL_MODEL_API_KEY=${LOCAL_MODEL_API_KEY:-local}
 : "${REVISION:?REVISION is required}"
 : "${RUN_TAG:?RUN_TAG is required}"
 SERVER_KIND=${SERVER_KIND:-text}
-PORT=${PORT:-8000}
+PORT=${PORT:-$((20000 + ${SLURM_JOB_ID:-0} % 30000))}
 JOB_TAG=${SLURM_JOB_ID:-local-$$}
 SERVER_DIR="$PROJECT_ROOT/runs/model-server-$JOB_TAG"
 mkdir -p "$SERVER_DIR"
