@@ -1,6 +1,6 @@
 # 세션 인수인계: 현재 상태와 다음 작업
 
-마지막 점검: **2026-11-26 13:57 KST**
+마지막 점검: **2026-11-27 KST**
 
 이 문서는 다른 Codex/터미널 세션이 추측 없이 작업을 이어받기 위한 운영 메모다. 연구의 논문 연결은 `docs/SURVEY_TO_EXPERIMENT_KO.md`, 모델급·역할별 평가 기준은 `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`, 구체적인 실행 설계는 `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`를 먼저 읽는다.
 
@@ -20,6 +20,10 @@
   - `observation_planning`: 100/100
   - `evaluation_revision`: 150/150
 - 중단 시 기존 완료 키를 건너뛰는 resume 로직 구현
+- FigStep LLaVA-1.5-7B 200/200 응답 생성 완료, 사람평가 미완료
+- HADES LLaVA-1.5-7B·Beaver-Dam-7B 200목표×6단계 1,200/1,200 완료
+- HIMRD GPT-4o mini → SD3 Medium → LLaVA-v1.6-Mistral-7B → HarmBench 200/200 완료
+- 단계별 VLM·LLM·이미지 생성기·judge 라우팅을 `docs/PIPELINE_MODEL_ROUTING_KO.md`에 동결
 
 ### 부분 완료된 전체 실행
 
@@ -142,6 +146,7 @@ python3 -m survey_exp.annotation \
 | 모델급·의도 노출·역할별 지표·비용 | `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md` |
 | 연구 설계·중간작업 분석 | `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md` |
 | 원형 보존/변형 경계 | `docs/PROTOCOL_ADHERENCE_KO.md` |
+| 단계별 모델·모달리티·폐쇄형 API 선택 | `docs/PIPELINE_MODEL_ROUTING_KO.md` |
 | 공개 코드 대응 | `docs/CODE_ANALYSIS_KO.md` |
 | 역할·모델 실행환경 감사 | `docs/MODEL_ROLE_AND_ENVIRONMENT_AUDIT_KO.md` |
 | 데이터/출처 근거 | `docs/SOURCE_LEDGER_KO.md` |

@@ -2,8 +2,8 @@
 
 | 작업 사실 | 값 | 출처 |
 |---|---|---|
-| 1차 보조 모델 | Qwen/Qwen2.5-VL-32B-Instruct | 사용자의 현재 요청(로컬 32B 우선) |
-| 후속 비교 모델 | GPT-4o | 사용자의 현재 요청(나중에 별도 실행) |
+| 공통 역할 비교의 1차 보조 모델 | Qwen/Qwen2.5-VL-32B-Instruct | 사용자의 로컬 32B 기준선 요청과 고정 실행 config |
+| 원형 충실도 모델 선택 | 단계별 원 VLM·LLM·이미지 생성기·judge를 보존 | 각 공개 구현과 `docs/PIPELINE_MODEL_ROUTING_KO.md` |
 | HarmBench 표본 | 개발 20, 평가 50, 의미 범주 층화 | 실험 계획서 PDF p. 1 |
 | MM-SafetyBench 표본 | 5개 범주별 개발 4, 평가 10 | 실험 계획서 PDF p. 1 |
 | 이미지 조건 | 동일 목표의 SD와 SD_TYPO를 같은 분할에 배치 | 실험 계획서 PDF p. 1 |
@@ -14,9 +14,14 @@
 | MemJack 공개 궤적 | 5,959 trajectories, 55,867 rounds | 첨부된 공개 MemJack-Bench의 실제 파일 행 수 |
 | MM-SafetyBench 이미지 배포본 | ZIP SHA-256 `7e1a9f08212038ceaa74801964d2b97c219509663bbd017ab77abb1b063cc23e` | 공식 GitHub README의 Google Drive 배포본을 내려받아 계산 |
 | MemJack 공개 궤적 배포본 | `senwuou/MemJack`, revision `3ba067e58b99c3becc57b13e9352f0264bea9338` | Hugging Face dataset card와 실제 파일 checksum |
+| VE-Safety 배포 revision | `zybeich/VE-Safety`, revision `7167cd2aa13069c72a27fca5154022ef3bd314c6` | Hugging Face dataset metadata; 2026-11-27 실제 파일 다운로드는 403 |
 | 공통 이미지 생성기 | SDXL base 1.0, revision `462165984030d82259a11f4367a4eed129e94a7b` | 통제 실험용 고정 설정 `configs/image_generators.yaml` |
 | HADES 원형 이미지 생성기 | PixArt-XL-2-1024-MS, revision `b89adadeccd9ead2adcb9fa2825d3fabec48d404` | HADES 공개 코드 `PixArtAlphaPipeline` 호출 |
 | HIMRD 원형 이미지 생성기 | SD3 Medium Diffusers, revision `ea42f8cef0f178587cf766dc8129abd379c90671` | HIMRD 공개 코드의 50-step, 512×512, guidance 8.0 설정 |
+| MM-Plan 공개 로컬 모델 | Qwen3-VL-4B attacker base, Qwen3-VL-8B target | MM-Plan README와 공개 평가 script |
+| MM-Plan 폐쇄형 판정 모델 | Claude Sonnet 4.5 | MM-Plan 공개 평가 script의 기본 judge |
+| MemJack 공개 로컬 모델 | Qwen3-VL-8B, Qwen3-VL-Embedding-8B, Qwen3Guard-Gen-8B | MemJack 고정 revision의 config와 model loader |
+| MemJack 논문 주 victim | Qwen3-VL-Plus | MemJack 고정 revision의 기본 config |
 
 결과 수치, 거부율, 품질 분포, 비용은 아직 실행 산출물이므로 문서에서 미리 채우지 않는다.
 

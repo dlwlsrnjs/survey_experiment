@@ -7,10 +7,11 @@
 1. `docs/SURVEY_TO_EXPERIMENT_KO.md`
 2. `docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md`
 3. `docs/SOURCE_FIDELITY_EXECUTION_KO.md`
-4. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
-5. `docs/SESSION_HANDOFF_KO.md`
-6. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
-7. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
+4. `docs/PIPELINE_MODEL_ROUTING_KO.md`
+5. `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md`
+6. `docs/SESSION_HANDOFF_KO.md`
+7. 새 머신이나 환경 문제면 `docs/SETUP_KO.md`
+8. 필요한 경우 `docs/PROTOCOL_ADHERENCE_KO.md`와 `docs/CODE_ANALYSIS_KO.md`
 
 운영 원칙:
 
@@ -22,3 +23,4 @@
 - 새 실험은 기존 `experiment_id`와 출력 디렉터리를 재사용할지 먼저 판단하고, resume 목적이 아니면 새 ID를 사용한다.
 - 완료 여부는 `outputs.jsonl` 행 수만으로 판단하지 말고 `completed.json`, provenance, 계획 호출 수, 사람평가 상태를 함께 확인한다.
 - 외부 저장소·데이터·모델 revision은 `configs/assets.lock.json`, 이미지 생성기는 `configs/image_generators.yaml`을 기준으로 하며 임의로 최신 revision으로 바꾸지 않는다.
+- 원형 충실도 실행은 `docs/PIPELINE_MODEL_ROUTING_KO.md`에 따라 VLM·LLM·이미지 생성기·judge를 단계별로 구분하고, 하나의 대체 모델로 전 단계를 통일하지 않는다.

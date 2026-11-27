@@ -22,7 +22,7 @@
 
 이미지 표현 방식(`SD/SD_TYPO`)과 피드백·경험 조건(`A/B/C/C_random`)은 이 네 질문을 설명하기 위한 세부 통제 실험이다. 기존 공격 논문들의 공격 성공률을 다시 줄 세우는 것이 목적은 아니다. 서로 다른 논문의 결과를 억지로 직접 비교하지 않고, **보조 모델의 역할 수행능력, 안전 거부 경계, 비용**을 공통 조건에서 비교하는 것이 목적이다. 모델의 비공개 생각 과정을 추측하지도 않는다. 모델이 실제로 받은 입력, 내놓은 구조화된 결과, 다음 단계에서 사용된 기록만 분석한다.
 
-완료된 `Qwen/Qwen2.5-VL-32B-Instruct` 실험은 이 비교의 **첫 번째 로컬 기준선**이다. 형식은 안정적이었지만 역할별 비거부 유효 산출물이 0~27%에 그쳤고 중대한 사실 오류도 표본에서 확인되어, 역할 수행능력의 주 모델로 단독 사용하지 않는다. 결과는 실패 양상을 포함한 기준선으로 보존하고 `Qwen/Qwen3-VL-32B-Thinking`을 동일 입력 품질 게이트로 비교한다. 자세한 판정 기준은 [로컬 32B 응답 품질 점검](docs/LOCAL32B_QUALITY_GATE_KO.md)에 정리했다.
+완료된 `Qwen/Qwen2.5-VL-32B-Instruct` 실험은 이 비교의 **첫 번째 로컬 기준선**이다. 후속 `Qwen/Qwen3-VL-32B-Thinking`과 `Qwen/Qwen3-VL-32B-Instruct` smoke도 독립 품질 게이트를 통과하지 못했다. 이 결과는 실패 양상을 포함한 공통 역할 기준선으로 보존하며, 원 논문 재현에서는 하나의 32B 모델을 모든 단계에 넣지 않는다. 이미지 이해는 원 VLM, 텍스트 역할은 원 LLM, 이미지 합성은 원 생성 모델, 판정은 원 judge로 실행한다. 자세한 선택 기준은 [원 논문 단계별 모델 라우팅](docs/PIPELINE_MODEL_ROUTING_KO.md)과 [로컬 32B 응답 품질 점검](docs/LOCAL32B_QUALITY_GATE_KO.md)에 정리했다.
 
 ## 연구 설계 한눈에 보기
 
@@ -65,9 +65,10 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 1. [서베이 논문과 실험 설계의 연결](docs/SURVEY_TO_EXPERIMENT_KO.md): 왜 이 실험을 하는지와 무엇을 말할 수 있는지
 2. [모델급·역할별 수행능력 평가 설계](docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md): 모델군, 의도 노출 조건, 역할별 지표와 비용 계산
 3. [논문 실구현 우선 실행](docs/SOURCE_FIDELITY_EXECUTION_KO.md): 원 벤치마크·원 모델과 GPT 역할 치환 원칙, 현재 실행
-4. [실험 설정 및 중간작업 분석 계획](docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md): 비교 조건, 통계와 완료 기준
-5. [새 머신 설치 및 실행](docs/SETUP_KO.md): 데이터와 모델을 포함한 재현 방법
-6. [현재 상태와 세션 인수인계](docs/SESSION_HANDOFF_KO.md): 진행 중 실행과 안전한 재개 방법
+4. [원 논문 단계별 모델 라우팅](docs/PIPELINE_MODEL_ROUTING_KO.md): VLM·LLM·이미지 생성기·judge와 폐쇄형 API 사용 경계
+5. [실험 설정 및 중간작업 분석 계획](docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md): 비교 조건, 통계와 완료 기준
+6. [새 머신 설치 및 실행](docs/SETUP_KO.md): 데이터와 모델을 포함한 재현 방법
+7. [현재 상태와 세션 인수인계](docs/SESSION_HANDOFF_KO.md): 진행 중 실행과 안전한 재개 방법
 
 서베이 원문은 [진행 중 논문 PDF](서베이논문%28진행중%29.pdf), 실험의 출발안은 [보조 모델 작업 과정 실험안 PDF](VLM_Survey_Auxiliary_Model_Experiment_Plan_KO.pdf)에서 볼 수 있다. 상세 연결 문서에는 각 주장마다 PDF 페이지 근거를 적었다. 아직 완료되지 않은 실험 수치는 결과처럼 미리 쓰지 않는다.
 
@@ -76,10 +77,10 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 - 외부 공개 코드 7개, MM-SafetyBench 이미지, MemJack 데이터와 경험 은행을 고정 revision/checksum으로 복원할 수 있다.
 - 첫 로컬 보조 기준선은 `Qwen/Qwen2.5-VL-32B-Instruct`, 추론형 후속 후보는 `Qwen/Qwen3-VL-32B-Thinking`, 공통 타겟 VLM은 `Qwen/Qwen2.5-VL-7B-Instruct`, 공통 이미지 생성기는 SDXL이다.
 - 2026-11-26 07:28 UTC에 32B 역할 비교 2,100/2,100건이 완료됐다. Slurm exit code는 0이고 모든 레코드가 `error=null`이다.
-- HIMRD 원형 경로는 SD3 Medium, LLaVA-v1.6-Mistral-7B, HarmBench-Mistral-7B를 사용하는 1건 smoke와 200건 본 작업이 제출돼 있다.
-- HADES는 공식 공개 6단계 최적화 이미지 중 200개 고유 목표(1,200장)를 고정 manifest로 만들었고, 원 LLaVA-1.5-7B와 Beaver-Dam-7B 평가 작업을 제출했다.
-- FigStep은 공식 SafeBench 이미지와 원 텍스트 prompt를 사용하는 200건 LLaVA-1.5-7B 작업을 제출했다. 논문처럼 사람 판정을 주 평가로 사용하므로 응답 생성 완료와 ASR 확정을 구분한다.
-- MM-Plan은 Qwen3-VL-4B base planner는 준비됐지만 VE-Safety DUA 승인을 기다리고 있으며, 공개 저장소에는 논문 학습 완료 checkpoint가 없다.
+- HIMRD 원형 경로는 GPT-4o mini 역할, SD3 Medium, LLaVA-v1.6-Mistral-7B, HarmBench-Mistral-7B를 사용해 200조건 실행을 완료했다. 자동 판정과 최종 사람 검증은 구분한다.
+- HADES는 공식 공개 6단계 최적화 이미지의 200개 고유 목표, 1,200개 LLaVA-1.5-7B 응답과 Beaver-Dam-7B 판정을 완료했다.
+- FigStep은 공식 SafeBench 이미지와 원 텍스트 prompt로 200건 LLaVA-1.5-7B 응답을 완료했다. 논문처럼 사람 판정을 주 평가로 사용하므로 ASR은 아직 확정하지 않았다.
+- MM-Plan은 Qwen3-VL-4B base planner와 Qwen3-VL-8B target 가중치는 준비됐지만 실제 VE-Safety 파일 다운로드가 여전히 HTTP 403이고, 공개 저장소에는 논문 학습 완료 checkpoint가 없다.
 - MemJack 원 역할 모델과 공개 궤적은 준비됐고 32B 역할 재생은 완료됐다. 논문 대상 `Qwen3-VL-Plus`는 폐쇄형 API이고, 공식 저장소 revision에는 실행에 필수인 `configs/safety_policy.txt`가 빠져 있어 원형 종단간 실행은 그대로 제출할 수 없다. 공개 코드가 지원하는 Qwen3-VL-8B 로컬 victim 대체 실험은 원 논문 재현과 분리한다.
 - 이미지 생성을 포함하는 신규 파일럿과 전체 실험은 별도 experiment ID와 config를 사용한다.
 - 사람평가와 전체 호출이 끝나지 않았으므로 현재 부분 결과를 최종 결론이나 모델 순위로 간주하지 않는다.

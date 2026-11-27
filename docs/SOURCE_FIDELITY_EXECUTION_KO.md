@@ -72,12 +72,14 @@ H200 제출 파일은 `slurm/run_himrd_end_to_end_h200.sbatch`다. 2026-11-26 Hu
 
 | 기법 | 현재 사용하는 원 구성 | 실행 상태 | 아직 원형과 다른 부분 |
 |---|---|---|---|
-| FigStep | 공식 SafeBench 이미지·공식 incitement prompt·LLaVA-1.5-7B | local CLIP snapshot 수정 후 smoke `59838`, 성공 후 200건 `59839` | 논문과 동일하게 사람 판정이 필요하므로 GPU 응답 완료만으로 ASR을 확정하지 않음 |
-| HADES | 공식 공개 최적화 이미지 0–5단계·LLaVA-1.5-7B·Beaver-Dam-7B | local CLIP snapshot 수정 후 smoke `59836`, 성공 후 200목표×6단계(1,200행) `59837` | 공개 산출물 평가 트랙이며 PixArt/GPT로 이미지를 새로 생성하는 재생성 실험은 별도 |
-| HIMRD | GPT 역할만 GPT-4o mini로 치환, SD3 Medium·LLaVA-v1.6-Mistral-7B·HarmBench-Mistral-7B | 의존성 수정 후 smoke `59834`, 성공 후 200건 `59835` | 원 GPT-4o/o1 역할을 GPT-4o mini로 통일했고 SD3 single-file 대신 고정 Diffusers revision 사용 |
-| MM-Plan | Qwen3-VL-4B base planner와 공개 executor 코드 준비 | 미제출 | VE-Safety DUA 접근이 현재 403이며 논문 학습 완료 planner checkpoint도 미공개 |
+| FigStep | 공식 SafeBench 이미지·공식 incitement prompt·LLaVA-1.5-7B | smoke `59838`과 200건 `59839` 완료, 오류 0건 | 논문과 동일하게 사람 판정이 필요하므로 GPU 응답 완료만으로 ASR을 확정하지 않음 |
+| HADES | 공식 공개 최적화 이미지 0–5단계·LLaVA-1.5-7B·Beaver-Dam-7B | smoke `59836`과 200목표×6단계(1,200행) `59837` 완료 | 공개 산출물 평가 트랙이며 PixArt/GPT로 이미지를 새로 생성하는 재생성 실험은 별도 |
+| HIMRD | GPT 역할만 GPT-4o mini로 치환, SD3 Medium·LLaVA-v1.6-Mistral-7B·HarmBench-Mistral-7B | smoke `59834`과 200건 `59835` 완료 | 원 GPT-4o/o1 역할을 GPT-4o mini로 통일했고 SD3 single-file 대신 고정 Diffusers revision 사용 |
+| MM-Plan | Qwen3-VL-4B base planner와 Qwen3-VL-8B local target 가중치 준비 | 미제출 | metadata 조회는 가능하지만 실제 VE-Safety 다운로드는 2026-11-27에도 403이며 논문 학습 완료 planner checkpoint도 미공개; 원 judge는 Claude Sonnet 4.5 |
 | MemJack | Qwen3-VL-8B·Qwen3Guard-Gen-8B·Qwen3-VL-Embedding-8B 및 공식 궤적 준비 | 32B 역할 재생만 실행 중 | 논문 victim은 폐쇄형 `Qwen3-VL-Plus`이고 고정 공식 revision `a8d8a83378afe18bffce04b28d530a423d31508d`에는 실행 필수 파일 `configs/safety_policy.txt`가 없음 |
 
 FigStep/HADES/HIMRD의 smoke가 실패하면 연결된 본 작업은 시작하지 않는다. 실패 로그를 고친 뒤 새 smoke ID로 재검증한다. MM-Plan 데이터 접근 요청은 `https://huggingface.co/datasets/zybeich/VE-Safety`에서 별도로 승인받아야 한다.
 
 MemJack 논문은 수정하지 않은 COCO val2017 전체에서 `Qwen3-VL-Plus`를 평가한다. 공개 코드가 제공하는 Qwen3-VL-8B local backend는 실행 가능한 대체 조건이지 논문 주 결과의 원 대상이 아니다. 누락 정책 파일을 임의로 만들어 넣거나 local victim 결과를 원형 재현으로 표기하지 않는다. 정책 파일이 공개되거나 저자에게서 확보되면 COCO val2017 200장 smoke/full을 먼저 재현하고, 그 뒤 같은 200장을 공통 로컬 victim으로 돌리는 통제 실험을 추가한다.
+
+단계별 VLM·LLM·이미지 생성기·judge 선택과 폐쇄형 모델 필요 조건은 `docs/PIPELINE_MODEL_ROUTING_KO.md`를 따른다.

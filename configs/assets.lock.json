@@ -39,6 +39,13 @@
         "splits/test_ids.txt": "8f39bc8598266abd6da04be3c86084b35c703f113aa80134340b1fd34f185f10",
         "splits/manifest.json": "135e28a3018b36190086bc11b0ccb2fd48179be6b6c2e6fd40198378aaae5cf0"
       }
+    },
+    "ve_safety": {
+      "repo_id": "zybeich/VE-Safety",
+      "repo_type": "dataset",
+      "revision": "7167cd2aa13069c72a27fca5154022ef3bd314c6",
+      "gated": true,
+      "status": "metadata_visible_but_file_download_403_on_2026-11-27"
     }
   },
   "models": [
@@ -81,7 +88,7 @@
     {"repo_id": "Qwen/Qwen3-VL-4B-Instruct", "revision": "ebb281ec70b05090aa6165b016eac8ec08e71b17", "role": "MM-Plan:original_base_planner", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen2.5-VL-7B-Instruct", "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5", "role": "controlled_comparison:fixed_target_vlm", "profiles": ["core", "full"]},
     {"repo_id": "Qwen/Qwen3-VL-Embedding-8B", "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7", "role": "MemJack:embedding", "profiles": ["full"]},
-    {"repo_id": "Qwen/Qwen3-VL-8B-Instruct", "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b", "role": "MemJack:planner_attacker_reflection_and_local_victim", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3-VL-8B-Instruct", "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b", "role": "MM-Plan:local_target;MemJack:planner_attacker_reflection_and_local_victim", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen3Guard-Gen-8B", "revision": "4505cb1a6f1864f21f8b27f7daf1b9a1aab6edbb", "role": "MemJack:safety_guard", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen3-8B", "revision": "b968826d9c46dd6066d109eabc6255188de91218", "role": "MemJack:config_legacy_llm_path", "profiles": ["full"]}
   ]
