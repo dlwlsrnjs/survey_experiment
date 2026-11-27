@@ -19,4 +19,5 @@ fi
 PROJECT_ROOT=$(cd "$PROJECT_ROOT" && pwd)
 export PROJECT_ROOT
 export HF_HOME=${HF_HOME:-$PROJECT_ROOT/.cache/huggingface}
-bash "$PROJECT_ROOT/scripts/run_local32b.sh" configs/qwen3vl32b_thinking_gate.yaml
+CONFIG=${CONFIG:-configs/qwen3vl32b_thinking_gate.yaml}
+bash "$PROJECT_ROOT/scripts/run_local32b.sh" "$CONFIG"

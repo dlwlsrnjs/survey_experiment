@@ -68,4 +68,12 @@ H200 품질 게이트:
 sbatch slurm/run_qwen3vl32b_thinking_gate.sbatch
 ```
 
+전체 작업이 긴 walltime 때문에 대기할 때 서버 기동과 구조화 출력만 먼저 확인하는 20건 smoke 실행:
+
+```bash
+CONFIG=configs/qwen3vl32b_thinking_smoke.yaml \
+  sbatch --time=01:00:00 --job-name=vlmaux-q3v32b-smoke \
+  slurm/run_qwen3vl32b_thinking_gate.sbatch
+```
+
 결과는 `runs/qwen3vl32b_thinking_gate_20261127`, 블라인드 평정지는 `annotations/qwen3vl32b_thinking_gate_20261127`에 생성된다. 게이트를 통과한 뒤에만 200건 이상 역할별 본 실험 설정을 별도로 동결한다.
