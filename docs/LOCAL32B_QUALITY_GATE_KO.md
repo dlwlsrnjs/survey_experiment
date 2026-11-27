@@ -76,4 +76,6 @@ CONFIG=configs/qwen3vl32b_thinking_smoke.yaml \
   slurm/run_qwen3vl32b_thinking_gate.sbatch
 ```
 
+전체 900건 실행 전 smoke 자동 게이트는 20/20 완료, API 오류 0건, 형식 유효율 95% 이상, `finish_reason=length` 10% 이하를 요구한다. 판정은 `scripts/check_thinking_smoke.py`가 `smoke_gate.json`으로 남긴다. 이는 운영·파싱 게이트이며 사람 내용 품질평가를 대신하지 않는다.
+
 초기 4,096토큰 진단 결과는 `runs/qwen3vl32b_thinking_gate_20261127`에 보존한다. 수정된 전체 결과는 `runs/qwen3vl32b_thinking_gate_v2_20261127`, 블라인드 평정지는 `annotations/qwen3vl32b_thinking_gate_v2_20261127`에 생성된다. 게이트를 통과한 뒤에만 200건 이상 역할별 본 실험 설정을 별도로 동결한다.
