@@ -24,14 +24,30 @@ def _load_image(url: str):
 class Engine:
     def __init__(self, model_id: str, revision: str | None, max_pixels: int):
         import torch
-        from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
+        from transformers import (
+            AutoConfig,
+            AutoProcessor,
+            Qwen2_5_VLForConditionalGeneration,
+            Qwen3VLForConditionalGeneration,
+            Qwen3VLMoeForConditionalGeneration,
+        )
 
         self.torch = torch
         self.model_id = model_id
         self.processor = AutoProcessor.from_pretrained(
             model_id, revision=revision, trust_remote_code=True, max_pixels=max_pixels,
         )
-        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+        architecture = (AutoConfig.from_pretrained(
+            model_id, revision=revision, trust_remote_code=True,
+        ).architectures or [""])[0]
+        model_class = {
+            "Qwen2_5_VLForConditionalGeneration": Qwen2_5_VLForConditionalGeneration,
+            "Qwen3VLForConditionalGeneration": Qwen3VLForConditionalGeneration,
+            "Qwen3VLMoeForConditionalGeneration": Qwen3VLMoeForConditionalGeneration,
+        }.get(architecture)
+        if model_class is None:
+            raise ValueError(f"Unsupported local VLM architecture: {architecture}")
+        self.model = model_class.from_pretrained(
             model_id,
             revision=revision,
             torch_dtype=torch.bfloat16,
@@ -137,7 +153,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Minimal OpenAI-compatible Qwen2.5-VL local server")
+    parser = argparse.ArgumentParser(description="Minimal OpenAI-compatible Qwen2.5/3-VL local server")
     parser.add_argument("--model", default="Qwen/Qwen2.5-VL-32B-Instruct")
     parser.add_argument("--revision")
     parser.add_argument("--host", default="127.0.0.1")

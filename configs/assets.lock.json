@@ -43,6 +43,7 @@
   },
   "models": [
     {"repo_id": "Qwen/Qwen2.5-VL-32B-Instruct", "revision": "7cfb30d71a1f4f49a57592323337a4a4727301da", "role": "core:auxiliary_model", "profiles": ["core", "full"]},
+    {"repo_id": "Qwen/Qwen3-VL-32B-Thinking", "revision": "7edd10ffd1196091948fb245ff63e406ccb2d4d1", "role": "core:reasoning_auxiliary_model", "profiles": ["core", "full"]},
     {
       "repo_id": "stabilityai/stable-diffusion-xl-base-1.0",
       "revision": "462165984030d82259a11f4367a4eed129e94a7b",

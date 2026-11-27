@@ -23,6 +23,7 @@ class AssetLockTests(unittest.TestCase):
     def test_core_contains_32b_and_controlled_generator(self) -> None:
         core = {item["repo_id"] for item in self.lock["models"] if "core" in item["profiles"]}
         self.assertIn("Qwen/Qwen2.5-VL-32B-Instruct", core)
+        self.assertIn("Qwen/Qwen3-VL-32B-Thinking", core)
         self.assertIn("Qwen/Qwen2.5-VL-7B-Instruct", core)
         self.assertIn("stabilityai/stable-diffusion-xl-base-1.0", core)
 

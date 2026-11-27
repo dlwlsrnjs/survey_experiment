@@ -1,0 +1,22 @@
+experiment_id: qwen3vl32b_thinking_gate_20261127
+manifest: ../data/manifests/fixed_inputs.jsonl
+output_root: ../runs
+split: eval
+repeats: 1
+role_repeats:
+  experience_use: 1
+target_query_cap: 3
+allowed_image_ops: [crop, mask, blur]
+roles: [generation, observation_planning, evaluation_revision, experience_use]
+experience_bank: ../data/manifests/memjack_train_experience.jsonl
+model:
+  backend: openai_compatible
+  name: Qwen/Qwen3-VL-32B-Thinking
+  revision: 7edd10ffd1196091948fb245ff63e406ccb2d4d1
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: LOCAL_MODEL_API_KEY
+  temperature: 0.0
+  seed: 20261127
+  # Thinking tokens and the final JSON share this budget.
+  max_tokens: 4096
+  timeout_seconds: 900
