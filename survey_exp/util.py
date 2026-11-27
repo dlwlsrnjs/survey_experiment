@@ -79,6 +79,13 @@ def seeded_order(values: Iterable[Any], seed: int, key=lambda x: x) -> list[Any]
 
 def parse_json_object(text: str) -> dict[str, Any]:
     text = text.strip()
+    # Qwen Thinking models emit visible reasoning before the final answer.  The
+    # reasoning can contain JSON examples/braces, so only parse the answer after
+    # the final thinking delimiter when it is present.
+    if "<think>" in text and "</think>" not in text:
+        raise ValueError("Thinking response ended before the final answer")
+    if "</think>" in text:
+        text = text.rsplit("</think>", 1)[1].strip()
     if text.startswith("```"):
         text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.I)
         text = re.sub(r"\s*```$", "", text)

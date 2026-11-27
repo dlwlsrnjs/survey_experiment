@@ -307,6 +307,9 @@ def run(
                         },
                         "request_id": result.request_id,
                         "response_id": result.response_id,
+                        "finish_reason": (
+                            ((result.raw or {}).get("choices") or [{}])[0].get("finish_reason")
+                        ),
                         "latency_seconds": result.latency_seconds,
                         "usage": result.usage,
                         "error": result.error,

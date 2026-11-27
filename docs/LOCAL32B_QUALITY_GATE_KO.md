@@ -35,7 +35,7 @@
 - 기존 32B와 같은 조밀한 32B급이어서 단순 크기 증가보다 세대·추론 모드 차이를 비교하기 쉽다.
 - 이미지 입력, OCR, 시각 추론과 에이전트 상호작용을 함께 지원하므로 네 역할을 하나의 공통 모델로 실행할 수 있다.
 - BF16 가중치는 H200 한 장에서 실행 가능한 범위다.
-- Thinking 토큰과 최종 JSON이 같은 출력 예산을 사용하므로 `max_tokens=4096`으로 별도 설정한다.
+- Thinking 토큰과 최종 JSON이 같은 출력 예산을 사용한다. 초기 smoke에서 4,096토큰을 모두 사용하고 최종 JSON에 도달하지 못한 사례가 확인되어 `max_tokens=8192`로 설정하고 `finish_reason=length`를 별도 기록한다.
 
 이 모델은 기존 논문의 원 모델을 대체하지 않는다. 논문 실구현 결과는 원 설정으로 보존하고, 공통 역할 비교에서만 추론형 후속 후보로 사용한다.
 
@@ -76,4 +76,4 @@ CONFIG=configs/qwen3vl32b_thinking_smoke.yaml \
   slurm/run_qwen3vl32b_thinking_gate.sbatch
 ```
 
-결과는 `runs/qwen3vl32b_thinking_gate_20261127`, 블라인드 평정지는 `annotations/qwen3vl32b_thinking_gate_20261127`에 생성된다. 게이트를 통과한 뒤에만 200건 이상 역할별 본 실험 설정을 별도로 동결한다.
+초기 4,096토큰 진단 결과는 `runs/qwen3vl32b_thinking_gate_20261127`에 보존한다. 수정된 전체 결과는 `runs/qwen3vl32b_thinking_gate_v2_20261127`, 블라인드 평정지는 `annotations/qwen3vl32b_thinking_gate_v2_20261127`에 생성된다. 게이트를 통과한 뒤에만 200건 이상 역할별 본 실험 설정을 별도로 동결한다.

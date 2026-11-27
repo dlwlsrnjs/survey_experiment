@@ -1,4 +1,4 @@
-experiment_id: qwen3vl32b_thinking_gate_20261127
+experiment_id: qwen3vl32b_thinking_gate_v2_20261127
 manifest: ../data/manifests/fixed_inputs.jsonl
 output_root: ../runs
 split: eval
@@ -17,6 +17,7 @@ model:
   api_key_env: LOCAL_MODEL_API_KEY
   temperature: 0.0
   seed: 20261127
-  # Thinking tokens and the final JSON share this budget.
-  max_tokens: 4096
+  # Thinking tokens and the final JSON share this budget. A 4,096-token smoke
+  # case exhausted the budget before the final JSON, so the gate uses 8,192.
+  max_tokens: 8192
   timeout_seconds: 900

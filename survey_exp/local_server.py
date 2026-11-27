@@ -102,12 +102,13 @@ class Engine:
         text = self.processor.batch_decode(trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
         prompt_tokens = int(inputs.input_ids.shape[1])
         completion_tokens = int(trimmed[0].shape[0])
+        finish_reason = "length" if completion_tokens >= max_tokens else "stop"
         return {
             "id": f"chatcmpl-local-{uuid.uuid4()}",
             "object": "chat.completion",
             "created": int(time.time()),
             "model": self.model_id,
-            "choices": [{"index": 0, "message": {"role": "assistant", "content": text}, "finish_reason": "stop"}],
+            "choices": [{"index": 0, "message": {"role": "assistant", "content": text}, "finish_reason": finish_reason}],
             "usage": {
                 "prompt_tokens": prompt_tokens,
                 "completion_tokens": completion_tokens,
