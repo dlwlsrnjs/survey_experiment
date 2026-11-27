@@ -35,4 +35,28 @@ combination_search:
   methods_per_combination: 5
   planned_case_evaluations: 125000
   ranking_scope: fixed_benchmark_comparison_not_external_test
+  execution_layers:
+    registered_factorial:
+      combinations: 216
+      rule: retain_gated_and_failed_rows_with_reason
+    currently_executable_factorial:
+      vlms: 6
+      llms: 5
+      image_generators: 5
+      combinations: 150
+    applicable_three_stage_cross:
+      methods: [HADES, HIMRD]
+      goals_per_method: 200
+      target_calls_per_combination: 400
+      planned_target_calls: 60000
+      judges_per_target_output: 2
+      planned_automatic_judgements: 120000
+    structurally_not_applicable_components:
+      rule: record_not_applicable_instead_of_inserting_a_model_stage_absent_from_the_method
+      examples:
+        - FigStep_does_not_use_a_diffusion_generator
+        - MM-Plan_is_not_a_text_to_image_pipeline
+    full_five_method_ranking:
+      status: blocked_until_all_fixed_200_case_pools_exist
+      blockers: [MM-Plan_DUA_403, MemJack_original_image_paths_and_local_victim_contract]
 

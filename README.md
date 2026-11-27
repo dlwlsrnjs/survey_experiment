@@ -67,7 +67,7 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 2. [모델급·역할별 수행능력 평가 설계](docs/MODEL_ROLE_CAPABILITY_EVALUATION_KO.md): 모델군, 의도 노출 조건, 역할별 지표와 비용 계산
 3. [논문 실구현 우선 실행](docs/SOURCE_FIDELITY_EXECUTION_KO.md): 원 벤치마크·원 모델과 GPT 역할 치환 원칙, 현재 실행
 4. [원 논문 단계별 모델 라우팅](docs/PIPELINE_MODEL_ROUTING_KO.md): VLM·LLM·이미지 생성기·judge와 폐쇄형 API 사용 경계
-5. [공개 모델 최적 조합 탐색](docs/OPEN_BEST_MODEL_SEARCH_KO.md): 후보군, 라이선스 구분, 125개 조합×기법별 200목표의 선정 기준
+5. [공개 모델 최적 조합 탐색](docs/OPEN_BEST_MODEL_SEARCH_KO.md): 후보군, 라이선스 구분, 216개 등록 조합과 현재 실행 가능한 150개 조합의 선정 기준
 6. [실험 설정 및 중간작업 분석 계획](docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md): 비교 조건, 통계와 완료 기준
 7. [새 머신 설치 및 실행](docs/SETUP_KO.md): 데이터와 모델을 포함한 재현 방법
 8. [현재 상태와 세션 인수인계](docs/SESSION_HANDOFF_KO.md): 진행 중 실행과 안전한 재개 방법
@@ -84,6 +84,8 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 - FigStep은 공식 SafeBench 이미지와 원 텍스트 prompt로 200건 LLaVA-1.5-7B 응답을 완료했다. 논문처럼 사람 판정을 주 평가로 사용하므로 ASR은 아직 확정하지 않았다.
 - MM-Plan은 Qwen3-VL-4B base planner와 Qwen3-VL-8B target 가중치는 준비됐지만 실제 VE-Safety 파일 다운로드가 여전히 HTTP 403이고, 공개 저장소에는 논문 학습 완료 checkpoint가 없다.
 - MemJack 원 역할 모델과 공개 궤적은 준비됐고 32B 역할 재생은 완료됐다. 논문 대상 `Qwen3-VL-Plus`는 폐쇄형 API이고, 공식 저장소 revision에는 실행에 필수인 `configs/safety_policy.txt`가 빠져 있어 원형 종단간 실행은 그대로 제출할 수 없다. 공개 코드가 지원하는 Qwen3-VL-8B 로컬 victim 대체 실험은 원 논문 재현과 분리한다.
+- 공개 모델 조합 탐색에는 VLM·LLM·이미지 생성기 각 6개를 등록해 216개 행을 고정했다. 현재 접근 가능한 6×5×5=150개 조합에 대해서는 HADES·HIMRD의 `LLM → 이미지 생성 → 표적 VLM` 60,000개 호출과 HarmBench·Qwen3Guard 120,000개 자동 판정 작업을 H200 큐에 제출했다. 이 수치는 계획·진행량이며 완료 결과가 아니다.
+- Llama 3.3과 SD3.5 Large는 현재 계정에서 gated 403이므로 원 행을 삭제하지 않고 blocked로 보존한다. Qwen3-32B와 SD3 Medium을 실행 대체 후보로 분리해 표시한다. FigStep·MM-Plan처럼 원 기법에 이미지 생성 축이 없는 경우는 T2I 모델을 억지로 넣지 않고 `not_applicable`로 집계한다.
 - 이미지 생성을 포함하는 신규 파일럿과 전체 실험은 별도 experiment ID와 config를 사용한다.
 - 사람평가와 전체 호출이 끝나지 않았으므로 현재 부분 결과를 최종 결론이나 모델 순위로 간주하지 않는다.
 

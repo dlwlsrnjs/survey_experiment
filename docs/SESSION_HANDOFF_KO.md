@@ -223,3 +223,13 @@ python3 -m survey_exp.annotation \
 - GLM-4.5V 최초 2×H200 적재는 46 shard 중 28번째에서 비정상 종료됐다. `60032`는 4×H200·300GB RAM으로 재시도한다.
 - Llama 3.3과 SD3.5 Large는 현재 HF 계정에서 각각 403이다. 원 후보를 삭제하지 않고 Qwen3-32B와 이미 승인된 SD3 Medium을 실행 대체 후보로 추가했다. 다운로드 array `60027`, 후속 LLM `60036`, 이미지 `60037`이다.
 - 확장 행렬 `configs/open_best_combinations_expanded.jsonl`은 6×6×6=216개다. 현재 접근 가능한 실행 조합은 최대 6×5×5=150개이며, blocked 조합도 누락하지 않고 이유와 함께 집계한다.
+
+### 150개 실행 가능 조합의 종단간 교차 큐
+
+- HADES와 HIMRD의 실제 3단 경로에서 `5 LLM × 5 이미지 생성기 × 6 VLM × 2기법 × 200목표 = 60,000`개 표적 VLM 호출을 계획했다. 각 성공 출력에 HarmBench와 Qwen3Guard를 적용하므로 자동 판정 계획량은 120,000개다.
+- 이미지 교차 작업은 Qwen-Image-2512 `60039`, Qwen-Image-2.1 retry `60048`, FLUX `60041`, PixArt `60042`, SD3 Medium `60043`이다. 각 작업은 다섯 LLM 결과가 모두 끝난 뒤 2,000개 이미지를 생성한다.
+- Qwen-Image-2.1 최초 구성요소 작업 `59973`은 설치된 diffusers 0.35.2에 `QwenImage21Pipeline`이 없어 실패했다. 공식 요구사항을 다른 모델과 분리한 `.venvs/qwen21`을 만들었고, 재현 설치는 `scripts/install_qwen_image21_env.sh`, 구성요소 retry는 `60047`이다. 실패한 원시 provenance는 보존한다.
+- 10,000건 VLM 교차 작업은 Qwen Instruct `60055`, InternVL `60056`, Qwen Thinking `60051`, Mistral `60052`, Gemma `60053`, GLM `60054`다. GLM만 4×H200·300GB를 요청한다.
+- 각 VLM 작업 뒤 두 judge 작업을 제출했다. `60057`–`60068`이 HarmBench/Qwen3Guard 12개 작업이다. 이들은 자동 판정이며 사람평가를 대체하지 않는다.
+- FigStep·MM-Plan처럼 이미지 생성 축이 구조적으로 없는 기법에 T2I 모델을 억지로 삽입하지 않는다. 해당 축은 `not_applicable`로 기록하고 실제 역할에 맞는 부분 행렬로 평가한다. MM-Plan·MemJack 200개 pool blocker가 해소되기 전에는 다섯 기법 전역 순위를 내지 않는다.
+- 교차 runner는 `survey_exp/open_best_cross_image_eval.py`, `survey_exp/open_best_cross_vlm_eval.py`, `survey_exp/open_best_cross_judge_eval.py`이고 Slurm entrypoint는 대응하는 `slurm/run_open_best_cross_*_h200.sbatch`다.

@@ -132,6 +132,29 @@ VLM 5개 × LLM 5개 × 이미지 생성 모델 5개를 사용해 **125개 조�
 2. 연구용 공개 가중치를 포함한 성능 최상 조합
 3. GPU-hours당 usable yield가 가장 높은 효율 조합
 
+### 실제 교차 실행량과 경우의 수 처리
+
+“모든 조합”은 기법에 존재하지 않는 단계를 억지로 추가한다는 뜻이 아니다. 먼저 216개 등록 조합을 원장에 모두 남기고, 접근 가능한 후보의 실행 상태를 다음처럼 구분한다.
+
+| 층 | 경우의 수 | 처리 방식 |
+|---|---:|---|
+| 등록된 확장 행렬 | 6 VLM × 6 LLM × 6 이미지 = 216 | gated 후보와 실패 후보도 행을 삭제하지 않음 |
+| 현재 접근 가능한 행렬 | 6 × 5 × 5 = 150 | 실제 H200 실행 대상 |
+| HADES·HIMRD 3단 교차 | 150조합 × 2기법 × 200목표 = 60,000 표적 호출 | LLM 산출물, 생성 이미지, VLM 응답을 checksum으로 연결 |
+| 자동 판정 | 60,000 × 2 judge = 120,000 판정 | HarmBench와 Qwen3Guard를 독립 적용 |
+
+FigStep의 고정 타이포그래피 렌더러 자리에 diffusion 모델을 넣거나, MM-Plan에 존재하지 않는 T2I 단계를 추가하면 원 기법과 다른 파이프라인이 된다. 이런 축은 `not_applicable`로 기록한다. FigStep은 `LLM × VLM`, MM-Plan은 planner/target VLM, MemJack은 memory·reflection·victim 역할처럼 실제 정보 흐름에 맞는 부분 행렬로 평가한다. 최종 다섯 기법 macro 순위는 MM-Plan과 MemJack의 200개 고정 pool이 확보되기 전까지 계산하지 않는다.
+
+교차 실행 코드는 다음 세 단계다.
+
+1. `open_best_cross_image_eval.py`: 다섯 LLM의 HADES·HIMRD 역할 산출물을 다섯 이미지 생성기에 전달해 이미지 모델당 2,000건을 생성한다.
+2. `open_best_cross_vlm_eval.py`: 다섯 이미지 모델의 10,000건을 각 VLM에 한 번씩 질의한다.
+3. `open_best_cross_judge_eval.py`: 각 VLM 결과 10,000건에 HarmBench와 Qwen3Guard를 각각 적용한다.
+
+상류 거부, 파싱 실패, 이미지 생성 실패, VLM 오류는 성공한 행만 남기는 방식으로 제거하지 않는다. 각각 `upstream_unusable`, `generation_error`, `model_error`, `not_reached`로 보존하여 조합의 usable yield 분모에 포함한다. 자동 판정 수치만으로 최종 ASR이나 우승 모델을 선언하지 않으며, 사람평가 상태는 별도 필드로 남긴다.
+
+Qwen-Image-2.1은 공식 파이프라인이 Python 3.11 이상과 개발판 `diffusers`를 요구하므로 다른 모델 환경과 분리한다. `scripts/install_qwen_image21_env.sh`가 Python 3.12, Torch, Transformers 및 고정 `diffusers` commit을 `.venvs/qwen21`에 설치한다.
+
 ### 4단계: 전 기법 검증
 
 모든 본선 조합을 FigStep, HADES, HIMRD, MM-Plan, MemJack에 각각 200개 목표로 적용한다. 한 기법에서만 좋은 조합을 전역 최상으로 부르지 않는다.
