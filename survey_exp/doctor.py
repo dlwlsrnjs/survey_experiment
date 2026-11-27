@@ -120,7 +120,7 @@ def audit(profile: str) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Audit a bootstrapped experiment environment")
-    parser.add_argument("--profile", choices=("core", "full"), default="core")
+    parser.add_argument("--profile", choices=("core", "full", "open_best"), default="core")
     parser.add_argument("--strict", action="store_true", help="return nonzero when required assets are missing")
     args = parser.parse_args()
     result = audit(args.profile)

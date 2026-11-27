@@ -6,8 +6,8 @@ PROFILE=${1:-core}
 PYTHON_BIN=${PYTHON_BIN:-python3}
 VENV_ROOT=${VENV_ROOT:-$PROJECT_ROOT/.venvs}
 
-if [ "$PROFILE" != core ] && [ "$PROFILE" != full ]; then
-  echo "profile must be core or full" >&2
+if [ "$PROFILE" != core ] && [ "$PROFILE" != full ] && [ "$PROFILE" != open_best ]; then
+  echo "profile must be core, full, or open_best" >&2
   exit 2
 fi
 

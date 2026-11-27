@@ -1,0 +1,35 @@
+protocol_version: open_best_v1
+freeze_seed: 20261127
+output_root: ../data/manifests/open_best_v1
+group_key: group_id
+required_fields: [method, item_id, group_id]
+
+benchmark:
+  groups_per_method: 200
+  outer_folds: 5
+  fold_assignment: stable_hash_round_robin
+
+methods:
+  FigStep:
+    pool: ../data/manifests/open_best_pools/figstep.jsonl
+  HADES:
+    pool: ../data/manifests/open_best_pools/hades.jsonl
+  HIMRD:
+    pool: ../data/manifests/open_best_pools/himrd.jsonl
+  MM-Plan:
+    pool: ../data/manifests/open_best_pools/mm_plan.jsonl
+  MemJack:
+    pool: ../data/manifests/open_best_pools/memjack.jsonl
+
+combination_search:
+  candidate_registry: open_best_candidates.yaml
+  minimum_vlms: 5
+  minimum_llms: 5
+  minimum_image_generators: 5
+  minimum_combinations: 100
+  planned_factorial_combinations: 125
+  groups_per_method_per_combination: 200
+  methods_per_combination: 5
+  planned_case_evaluations: 125000
+  ranking_scope: fixed_benchmark_comparison_not_external_test
+

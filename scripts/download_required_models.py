@@ -11,7 +11,7 @@ from huggingface_hub import snapshot_download
 def main() -> int:
     parser = argparse.ArgumentParser(description="Download revision-pinned experiment models")
     parser.add_argument("--lock", type=Path, required=True)
-    parser.add_argument("--profile", choices=("core", "full"), default="core")
+    parser.add_argument("--profile", choices=("core", "full", "open_best"), default="core")
     parser.add_argument("--status", type=Path, required=True)
     parser.add_argument("--cache-dir", type=Path)
     args = parser.parse_args()

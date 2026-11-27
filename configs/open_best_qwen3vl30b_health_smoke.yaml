@@ -1,0 +1,19 @@
+experiment_id: open_best_qwen3vl30b_health_smoke_20261127
+manifest: ../data/manifests/fixed_inputs.jsonl
+output_root: ../runs
+split: pilot
+repeats: 1
+target_query_cap: 3
+allowed_image_ops: [crop, mask, blur]
+roles: [generation]
+model:
+  backend: openai_compatible
+  name: Qwen/Qwen3-VL-30B-A3B-Instruct
+  revision: 9c4b90e1e4ba969fd3b5378b57d966d725f1b86c
+  base_url: http://127.0.0.1:8000/v1
+  api_key_env: LOCAL_MODEL_API_KEY
+  temperature: 0.0
+  seed: 20261127
+  max_tokens: 2048
+  timeout_seconds: 600
+

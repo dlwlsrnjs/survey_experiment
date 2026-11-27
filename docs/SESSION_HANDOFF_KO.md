@@ -24,6 +24,7 @@
 - HADES LLaVA-1.5-7B·Beaver-Dam-7B 200목표×6단계 1,200/1,200 완료
 - HIMRD GPT-4o mini → SD3 Medium → LLaVA-v1.6-Mistral-7B → HarmBench 200/200 완료
 - 단계별 VLM·LLM·이미지 생성기·judge 라우팅을 `docs/PIPELINE_MODEL_ROUTING_KO.md`에 동결
+- 모든 기법에 적용할 공개 VLM·LLM·이미지 생성기 최적 조합 탐색을 `docs/OPEN_BEST_MODEL_SEARCH_KO.md`와 `configs/open_best_candidates.yaml`에 분리
 
 ### 부분 완료된 전체 실행
 
@@ -147,6 +148,7 @@ python3 -m survey_exp.annotation \
 | 연구 설계·중간작업 분석 | `docs/EXPERIMENT_AND_INTERMEDIATE_ANALYSIS_KO.md` |
 | 원형 보존/변형 경계 | `docs/PROTOCOL_ADHERENCE_KO.md` |
 | 단계별 모델·모달리티·폐쇄형 API 선택 | `docs/PIPELINE_MODEL_ROUTING_KO.md` |
+| 공개 모델 최적 조합 후보와 선정 절차 | `docs/OPEN_BEST_MODEL_SEARCH_KO.md`, `configs/open_best_candidates.yaml` |
 | 공개 코드 대응 | `docs/CODE_ANALYSIS_KO.md` |
 | 역할·모델 실행환경 감사 | `docs/MODEL_ROLE_AND_ENVIRONMENT_AUDIT_KO.md` |
 | 데이터/출처 근거 | `docs/SOURCE_LEDGER_KO.md` |
@@ -185,3 +187,13 @@ python3 -m survey_exp.annotation \
 - FigStep 주 평가는 논문처럼 사람 판정이다. `completed.json`의 응답 완료와 ASR 확정을 혼동하지 않는다.
 - MM-Plan VE-Safety는 현재 Hugging Face 계정에서 `test.parquet` 다운로드가 HTTP 403이다. DUA 접근 승인이 필요하다.
 - MemJack 전체 원형 종단간 작업은 아직 제출하지 않았다. 논문 victim `Qwen3-VL-Plus`는 폐쇄형이고, 고정 공식 revision에는 `main.py`가 요구하는 `configs/safety_policy.txt`가 없다. 임의 정책을 원형으로 둔갑시키지 말고 저자 공개/확보 뒤 실행한다. 공개 local backend의 Qwen3-VL-8B 조건은 별도 대체 트랙이다. 32B 역할 재생은 2026-11-26 07:28 UTC에 2,100/2,100건으로 완료됐다.
+
+## 10. 2026-11-27 공개 모델 조합 탐색
+
+- 후보 registry는 `configs/open_best_candidates.yaml`이다. VLM 6개, LLM 5개, 이미지 생성기 5개를 기록했고 주 factorial에 들어갈 정확한 5/5/5 후보를 명시했다.
+- `configs/open_best_combinations.jsonl`에는 revision을 포함한 125개 조합이 있으며 sidecar SHA-256으로 고정했다.
+- 본선은 모든 125개 조합을 FigStep, HADES, HIMRD, MM-Plan, MemJack의 고유 목표 200개씩 실행한다. 1차 계획량은 125,000 조합–기법–목표 평가다.
+- 데이터 freezer는 `scripts/freeze_open_best_manifests.py`다. 다섯 기법 중 하나라도 실제 benchmark 고유 group 200개를 제공하지 못하면 실패한다. 같은 200개를 조합 선택에 사용하므로 외부 독립 test로 표현하지 않는다.
+- 현재 FigStep·HADES·HIMRD는 200개 이상 실제 benchmark 목표가 준비됐다. MM-Plan은 VE-Safety DUA 다운로드 403 때문에, MemJack은 공개 궤적의 원본 이미지 경로가 배포 환경의 절대경로이고 local victim 원형 파일이 불완전하기 때문에 본선 manifest를 아직 동결하지 않았다.
+- Slurm `59949`는 `Qwen/Qwen3-VL-30B-A3B-Instruct` 고정 revision 다운로드, `59950`은 성공 의존 H200 10건 건강검사, `59951`은 자동 gate다. 이 10건은 모델 적재·형식·거부 상태만 확인하며 순위 데이터가 아니다.
+- 본선 제출 전 `configs/open_best_protocol.yaml`의 데이터 pool 5개, 이미지 존재, matrix checksum, candidate cache, gated 라이선스 접근을 모두 확인한다. 일부 기법만으로 전역 순위를 내지 않는다.

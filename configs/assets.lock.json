@@ -52,6 +52,20 @@
     {"repo_id": "Qwen/Qwen2.5-VL-32B-Instruct", "revision": "7cfb30d71a1f4f49a57592323337a4a4727301da", "role": "core:auxiliary_model", "profiles": ["core", "full"]},
     {"repo_id": "Qwen/Qwen3-VL-32B-Thinking", "revision": "7edd10ffd1196091948fb245ff63e406ccb2d4d1", "role": "core:reasoning_auxiliary_model", "profiles": ["core", "full"]},
     {"repo_id": "Qwen/Qwen3-VL-32B-Instruct", "revision": "0cfaf48183f594c314753d30a4c4974bc75f3ccb", "role": "candidate:concise_auxiliary_model", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3-VL-30B-A3B-Instruct", "revision": "9c4b90e1e4ba969fd3b5378b57d966d725f1b86c", "role": "open_best:vlm", "profiles": ["open_best"]},
+    {"repo_id": "Qwen/Qwen3-VL-30B-A3B-Thinking", "revision": "d0ed0380729be07a546fdefafbb4fe411f341e92", "role": "open_best:vlm_reasoning", "profiles": ["open_best"]},
+    {"repo_id": "OpenGVLab/InternVL3_5-38B-HF", "revision": "7c830fc25e874f9a861087e3c70587f2b9b555f3", "role": "open_best:vlm", "profiles": ["open_best"]},
+    {"repo_id": "mistralai/Mistral-Small-3.1-24B-Instruct-2503", "revision": "6422280d08bb8453a133c022ef110d6fdef41559", "role": "open_best:vlm_and_llm", "profiles": ["open_best"]},
+    {"repo_id": "google/gemma-3-27b-it", "revision": "005ad3404e59d6023443cb575daa05336842228a", "role": "open_best:vlm_and_llm:gated", "profiles": ["open_best"]},
+    {"repo_id": "zai-org/GLM-4.5V", "revision": "ed47433b37111465ec527affaaddceff371bca04", "role": "open_best:vlm_multi_gpu_upper_bound", "profiles": ["open_best"]},
+    {"repo_id": "openai/gpt-oss-120b", "revision": "b5c939de8f754692c1647ca79fbf85e8c1e70f8a", "role": "open_best:llm", "profiles": ["open_best"]},
+    {"repo_id": "Qwen/Qwen3-30B-A3B-Instruct-2507", "revision": "0d7cf23991f47feeb3a57ecb4c9cee8ea4a17bfe", "role": "open_best:llm", "profiles": ["open_best"]},
+    {"repo_id": "meta-llama/Llama-3.3-70B-Instruct", "revision": "6f6073b423013f6a7d4d9f39144961bfbfbc386b", "role": "open_best:llm:gated", "profiles": ["open_best"]},
+    {"repo_id": "Qwen/Qwen-Image-2512", "revision": "25468b98e3276ca6700de15c6628e51b7de54a26", "role": "open_best:image_generator:apache2", "profiles": ["open_best"]},
+    {"repo_id": "Qwen/Qwen-Image-2.1", "revision": "d26bb61231c349cf6b7896fa83353113880e1ba3", "role": "open_best:image_generator:research_license", "profiles": ["open_best"]},
+    {"repo_id": "stabilityai/stable-diffusion-3.5-large", "revision": "ceddf0a7fdf2064ea28e2213e3b84e4afa170a0f", "role": "open_best:image_generator:gated", "profiles": ["open_best"]},
+    {"repo_id": "black-forest-labs/FLUX.1-dev", "revision": "45d95c497444bbaebe766e1528792fc9158c0c3a", "role": "open_best:image_generator:gated_noncommercial", "profiles": ["open_best"]},
+    {"repo_id": "PixArt-alpha/PixArt-Sigma-XL-2-1024-MS", "revision": "e102b3591cc82e97071b8b4cb90d834d0c487207", "role": "open_best:image_generator", "profiles": ["open_best"]},
     {
       "repo_id": "stabilityai/stable-diffusion-xl-base-1.0",
       "revision": "462165984030d82259a11f4367a4eed129e94a7b",
@@ -79,7 +93,7 @@
     {"repo_id": "PKU-Alignment/beaver-dam-7b", "revision": "3a5b70888869f04336d0d8344185ed74268ef896", "role": "HADES:final_safety_evaluator", "profiles": ["full"]},
     {"repo_id": "stabilityai/stable-diffusion-3-medium-diffusers", "revision": "ea42f8cef0f178587cf766dc8129abd379c90671", "role": "HIMRD:image_generator:gated", "profiles": ["full"]},
     {"repo_id": "llava-hf/llava-v1.6-mistral-7b-hf", "revision": "2424fdd47412fccc66d91719126b420e9fbd7065", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
-    {"repo_id": "cais/HarmBench-Mistral-7b-val-cls", "revision": "51182c7cdaf9b2e5f05b745b81b047b67e7384a1", "role": "HIMRD:success_classifier", "profiles": ["full"]},
+    {"repo_id": "cais/HarmBench-Mistral-7b-val-cls", "revision": "51182c7cdaf9b2e5f05b745b81b047b67e7384a1", "role": "HIMRD:success_classifier;open_best:success_classifier", "profiles": ["full", "open_best"]},
     {"repo_id": "THUDM/glm-4v-9b", "revision": "3376fea6e54db68587a89bf1ac27a6889bafb867", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen-VL-Chat", "revision": "f57cfbd358cb56b710d963669ad1bcfb44cdcdd8", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
     {"repo_id": "deepseek-ai/deepseek-vl-7b-chat", "revision": "6f16f00805f45b5249f709ce21820122eeb43556", "role": "HIMRD:victim_vlm", "profiles": ["full"]},
@@ -89,7 +103,7 @@
     {"repo_id": "Qwen/Qwen2.5-VL-7B-Instruct", "revision": "cc594898137f460bfe9f0759e9844b3ce807cfb5", "role": "controlled_comparison:fixed_target_vlm", "profiles": ["core", "full"]},
     {"repo_id": "Qwen/Qwen3-VL-Embedding-8B", "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7", "role": "MemJack:embedding", "profiles": ["full"]},
     {"repo_id": "Qwen/Qwen3-VL-8B-Instruct", "revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b", "role": "MM-Plan:local_target;MemJack:planner_attacker_reflection_and_local_victim", "profiles": ["full"]},
-    {"repo_id": "Qwen/Qwen3Guard-Gen-8B", "revision": "4505cb1a6f1864f21f8b27f7daf1b9a1aab6edbb", "role": "MemJack:safety_guard", "profiles": ["full"]},
+    {"repo_id": "Qwen/Qwen3Guard-Gen-8B", "revision": "4505cb1a6f1864f21f8b27f7daf1b9a1aab6edbb", "role": "MemJack:safety_guard;open_best:safety_classifier", "profiles": ["full", "open_best"]},
     {"repo_id": "Qwen/Qwen3-8B", "revision": "b968826d9c46dd6066d109eabc6255188de91218", "role": "MemJack:config_legacy_llm_path", "profiles": ["full"]}
   ]
 }

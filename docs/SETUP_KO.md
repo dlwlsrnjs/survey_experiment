@@ -12,6 +12,7 @@
 - NVIDIA driver와 CUDA 사용 가능 GPU
 - `core`: GPU 메모리 80GB 이상 권장, 디스크 여유 약 100GB 이상
 - `full`: H200급 GPU 권장, 디스크 여유 약 350GB 이상
+- `open_best`: 단일 H200 및 일부 다중 GPU 후보, 공유 cache 기준 디스크 여유 약 1.3TB 이상
 
 32B VLM과 이미지 생성기가 같은 GPU에서 사용되므로 작은 GPU에서는 `device_map`, offload 또는 별도 GPU 프로세스 구성이 추가로 필요하다. 현재 Slurm 설정은 H200 한 장을 기준으로 한다.
 
@@ -21,6 +22,7 @@
 2. Hugging Face 계정과 token
 3. `senwuou/MemJack` gated dataset 접근 조건 수락
 4. `full` 프로필 사용 시 Stability AI SD3 모델 라이선스/접근 조건 수락
+5. `open_best` 사용 시 Gemma, Llama, FLUX, SD3.5의 gated 또는 별도 라이선스 조건 수락
 
 인증값은 환경변수로만 제공하고 저장소 파일에 기록하지 않는다.
 
@@ -52,6 +54,14 @@ export HF_TOKEN='YOUR_HUGGINGFACE_TOKEN'
 ```bash
 ./bootstrap.sh --profile full
 ```
+
+공개 VLM·LLM·이미지 생성 모델의 고정 토너먼트 후보 전체를 준비:
+
+```bash
+./bootstrap.sh --profile open_best
+```
+
+후보별 revision, 라이선스와 역할은 `configs/open_best_candidates.yaml`을 기준으로 한다. 저장소 표시 크기의 단순 합은 약 1.3TB이므로 공유 Hugging Face cache를 권장한다. gated 후보 접근권한이 없으면 다운로드와 strict doctor가 실패하며, 해당 후보를 조용히 다른 모델로 바꾸지 않는다.
 
 부트스트랩은 이미 올바른 파일을 다시 받지 않으며, checksum이나 Git commit이 다르면 중단한다. 필요한 단계만 생략할 수도 있다.
 
@@ -94,6 +104,7 @@ export PYTHON_BIN=/usr/bin/python3.10
 ```bash
 .venvs/modern/bin/python -m survey_exp.doctor --profile core --strict
 .venvs/modern/bin/python -m survey_exp.doctor --profile full --strict
+.venvs/modern/bin/python -m survey_exp.doctor --profile open_best --strict
 ```
 
 GPU가 없는 로그인 노드에서는 CUDA 항목만 경고로 표시한다. 저장소, 데이터, manifest, 경험 은행, 이미지 생성 profile, 모델 cache 누락은 strict 검사 실패다.

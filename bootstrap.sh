@@ -10,10 +10,11 @@ SKIP_MODELS=0
 
 usage() {
   cat <<'EOF'
-Usage: ./bootstrap.sh [--profile core|full] [--skip-envs] [--skip-repos] [--skip-data] [--skip-models]
+Usage: ./bootstrap.sh [--profile core|full|open_best] [--skip-envs] [--skip-repos] [--skip-data] [--skip-models]
 
 core: current controlled 32B experiment, SDXL generator, all datasets and pinned source repositories
 full: core plus source-fidelity models and the legacy VLM environment
+open_best: frozen open-model tournament candidates; about 1.3TB before cache deduplication
 
 Environment variables:
   PYTHON_BIN  Python 3.10+ used to create virtual environments (default: python3)
@@ -35,8 +36,8 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-if [ "$PROFILE" != core ] && [ "$PROFILE" != full ]; then
-  echo "profile must be core or full" >&2
+if [ "$PROFILE" != core ] && [ "$PROFILE" != full ] && [ "$PROFILE" != open_best ]; then
+  echo "profile must be core, full, or open_best" >&2
   exit 2
 fi
 
