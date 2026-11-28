@@ -27,7 +27,7 @@ export PYTHONUNBUFFERED=1
 
 cd "$PROJECT_ROOT"
 "$PYTHON_BIN" -m survey_exp.open_best_cross_image_eval \
-  --llm-run gptoss=runs/open_best_gpt_oss120b_retry1_20261127_llm_roles200 \
+  --llm-run gptoss=runs/open_best_gpt_oss120b_retry2_20261128_llm_roles200 \
   --llm-run qwen3a3b=runs/open_best_qwen3_30ba3b_retry1_20261127_llm_roles200 \
   --llm-run mistral31=runs/open_best_mistral_small31_24b_retry1_20261127_llm_roles200 \
   --llm-run gemma3=runs/open_best_gemma3_27b_retry1_20261127_llm_roles200 \

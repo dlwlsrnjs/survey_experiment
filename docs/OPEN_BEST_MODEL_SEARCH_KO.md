@@ -25,6 +25,8 @@
 
 주 분석은 5×5×5의 125개 조합을 유지한다. 최대 경우의 수 분석은 등록된 상한·대체 후보까지 포함한 **VLM 6개 × LLM 6개 × 이미지 생성기 6개 = 216개 조합**이다. `configs/open_best_combinations_expanded.jsonl`에 revision까지 고정한다. gated 403인 Llama 3.3과 SD3.5 Large도 행에서 삭제하지 않고 `blocked` 실행 상태로 남긴다. 실행 가능한 대체 후보 Qwen3-32B와 SD3 Medium을 포함하면 현재 접근권한에서 최대 6×5×5 = 150개 조합을 실제 실행할 수 있다.
 
+원래 125개 주 행렬은 Llama 3.3과 SD3.5 Large를 포함하므로 현재 계정의 403 접근 상태에서는 125개를 모두 실행할 수 없다. 이를 숨기거나 원 후보 이름만 바꿔치기하지 않고, 완주 가능한 별도 5×5×5 행렬을 `configs/open_best_combinations_executable125.jsonl`로 고정했다. 이 행렬은 Llama 3.3을 Qwen3-32B로, SD3.5 Large를 SD3 Medium으로 명시적으로 대체한다. 따라서 결과에는 반드시 **원 주 행렬**과 **접근 가능 대체 행렬**을 구분해 표기한다.
+
 ### VLM
 
 | 후보 | 우선 확인할 능력 | 선정 이유 |
@@ -154,6 +156,8 @@ FigStep의 고정 타이포그래피 렌더러 자리에 diffusion 모델을 넣
 상류 거부, 파싱 실패, 이미지 생성 실패, VLM 오류는 성공한 행만 남기는 방식으로 제거하지 않는다. 각각 `upstream_unusable`, `generation_error`, `model_error`, `not_reached`로 보존하여 조합의 usable yield 분모에 포함한다. 자동 판정 수치만으로 최종 ASR이나 우승 모델을 선언하지 않으며, 사람평가 상태는 별도 필드로 남긴다.
 
 Qwen-Image-2.1은 공식 파이프라인이 Python 3.11 이상과 개발판 `diffusers`를 요구하므로 다른 모델 환경과 분리한다. `scripts/install_qwen_image21_env.sh`가 Python 3.12, Torch, Transformers 및 고정 `diffusers` commit을 `.venvs/qwen21`에 설치한다.
+
+2026-11-28 재시도에서는 Qwen-Image-2.1 processor가 추가로 요구하는 `torchvision==0.22.1`을 같은 격리 환경에 고정했다. gpt-oss-120B의 Transformers 실행은 MXFP4가 비활성화되어 BF16 CPU offload로 내려가 17시간에 18레코드만 생성했으므로 중단했다. 원시 18레코드는 보존하고, `scripts/install_gptoss_vllm_env.sh`와 `slurm/run_open_best_gptoss_vllm_h200.sbatch`의 vLLM MXFP4 경로로 새 experiment ID에서 재실행한다.
 
 ### 4단계: 전 기법 검증
 

@@ -233,3 +233,12 @@ python3 -m survey_exp.annotation \
 - 각 VLM 작업 뒤 두 judge 작업을 제출했다. `60057`–`60068`이 HarmBench/Qwen3Guard 12개 작업이다. 이들은 자동 판정이며 사람평가를 대체하지 않는다.
 - FigStep·MM-Plan처럼 이미지 생성 축이 구조적으로 없는 기법에 T2I 모델을 억지로 삽입하지 않는다. 해당 축은 `not_applicable`로 기록하고 실제 역할에 맞는 부분 행렬로 평가한다. MM-Plan·MemJack 200개 pool blocker가 해소되기 전에는 다섯 기법 전역 순위를 내지 않는다.
 - 교차 runner는 `survey_exp/open_best_cross_image_eval.py`, `survey_exp/open_best_cross_vlm_eval.py`, `survey_exp/open_best_cross_judge_eval.py`이고 Slurm entrypoint는 대응하는 `slurm/run_open_best_cross_*_h200.sbatch`다.
+
+### 2026-11-28 실패 수정과 실행 가능한 125조합 재제출
+
+- 기존 gpt-oss Transformers 작업 `60038`은 MXFP4용 Triton 조건을 충족하지 못해 BF16·CPU offload로 실행됐다. 약 17시간에 18/1,000레코드뿐이어서 취소했고, 그 18개 원시 레코드는 `runs/open_best_gpt_oss120b_retry1_20261127_llm_roles200`에 보존한다.
+- 모델 카드의 과거 전용 vLLM wheel은 더 이상 제공되지 않는 Torch nightly를 요구했다. 현재 설치 가능한 `vllm==0.34.0`과 Torch 2.14.0의 격리 환경 `.venvs/gptoss-vllm`을 만들었고, 설치 재현은 `scripts/install_gptoss_vllm_env.sh`에 고정했다. 새 gpt-oss 작업은 `60314`, 출력은 `runs/open_best_gpt_oss120b_retry2_20261128_llm_roles200`이다.
+- Qwen-Image-2.1 retry1 `60047`은 `Qwen3VLVideoProcessor`가 요구하는 torchvision 누락으로 실패했다. `.venvs/qwen21`에 `torchvision==0.22.1`을 추가하고 pipeline import를 검증했다. retry2는 `60313`, 새 출력은 `runs/open_best_qwen_image21_retry2_20261128_image200`이다.
+- gated 403인 Llama 3.3·SD3.5 Large를 Qwen3-32B·SD3 Medium으로 명시적으로 대체한 완주 가능 125행을 `configs/open_best_combinations_executable125.jsonl`에 고정했다. SHA-256은 `3cbb50754c32af5628b729962956a1dd86288b42175f1c07df4737fdc7f81ff6`이다. 원래 125행렬 결과로 표현하면 안 된다.
+- 새 이미지 교차 작업은 `60315`–`60319`, 5개 표적 VLM 작업은 `60320`–`60324`, 두 judge의 10개 작업은 `60325`–`60334`다. 이 체인은 5×5×5=125개 조합, HADES·HIMRD 각 200목표의 50,000개 표적 호출과 100,000개 자동 판정을 계획한다.
+- 이 작업들은 제출 완료 상태일 뿐 결과 완료 상태가 아니다. `60313`과 `60314`의 smoke·완료를 먼저 확인하고, downstream 완료는 각 `completed.json`과 원시 행 수로 판정한다.

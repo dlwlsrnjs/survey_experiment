@@ -49,11 +49,11 @@ curl -fsS "http://127.0.0.1:${PORT}/v1/models" >/dev/null
 
 cd "$PROJECT_ROOT"
 "$PYTHON_BIN" -m survey_exp.open_best_cross_vlm_eval \
-  --image-run qwen2512=runs/open_best_cross_images_qwen_image2512_20261127 \
-  --image-run qwen21=runs/open_best_cross_images_qwen_image21_20261127 \
-  --image-run flux=runs/open_best_cross_images_flux1_dev_20261127 \
-  --image-run pixart=runs/open_best_cross_images_pixart_sigma_20261127 \
-  --image-run sd3med=runs/open_best_cross_images_sd3_medium_20261127 \
+  --image-run qwen2512=runs/open_best_cross_images_qwen_image2512_20261128 \
+  --image-run qwen21=runs/open_best_cross_images_qwen_image21_20261128 \
+  --image-run flux=runs/open_best_cross_images_flux1_dev_20261128 \
+  --image-run pixart=runs/open_best_cross_images_pixart_sigma_20261128 \
+  --image-run sd3med=runs/open_best_cross_images_sd3_medium_20261128 \
   --per-image-model 2000 \
   --output-dir "runs/open_best_cross_vlm_${RUN_TAG}" \
   --base-url "http://127.0.0.1:${PORT}/v1" --model "$MODEL_ID" --revision "$REVISION" \

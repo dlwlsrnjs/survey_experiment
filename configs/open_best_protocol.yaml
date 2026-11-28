@@ -44,6 +44,8 @@ combination_search:
       llms: 5
       image_generators: 5
       combinations: 150
+      complete_125_matrix: open_best_combinations_executable125.jsonl
+      complete_125_matrix_scope: substituted_executable_factorial_not_original_gated_primary
     applicable_three_stage_cross:
       methods: [HADES, HIMRD]
       goals_per_method: 200

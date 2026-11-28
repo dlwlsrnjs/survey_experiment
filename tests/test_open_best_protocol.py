@@ -39,6 +39,20 @@ class OpenBestProtocolTests(unittest.TestCase):
         self.assertEqual(len(rows), 216)
         self.assertEqual(payload, (ROOT / "configs/open_best_combinations_expanded.jsonl").read_bytes())
 
+    def test_executable_factorial_has_125_unblocked_substituted_combinations(self):
+        config = ROOT / "configs/open_best_candidates.yaml"
+        payload, rows = build(config, "executable_factorial_125")
+        self.assertEqual(len(rows), 125)
+        self.assertEqual(
+            payload,
+            (ROOT / "configs/open_best_combinations_executable125.jsonl").read_bytes(),
+        )
+        serialized = payload.decode("utf-8")
+        self.assertNotIn("Llama-3.3-70B-Instruct", serialized)
+        self.assertNotIn("stable-diffusion-3.5-large", serialized)
+        self.assertIn("Qwen3-32B", serialized)
+        self.assertIn("stable-diffusion-3-medium-diffusers", serialized)
+
     def test_every_combination_has_two_hundred_cases_per_method(self):
         protocol = yaml.safe_load((ROOT / "configs/open_best_protocol.yaml").read_text())
         self.assertEqual(protocol["benchmark"]["groups_per_method"], 200)

@@ -86,6 +86,7 @@ MM-SafetyBench 이미지에서는 관찰·계획 역할의 모델이 이미지�
 - MemJack 원 역할 모델과 공개 궤적은 준비됐고 32B 역할 재생은 완료됐다. 논문 대상 `Qwen3-VL-Plus`는 폐쇄형 API이고, 공식 저장소 revision에는 실행에 필수인 `configs/safety_policy.txt`가 빠져 있어 원형 종단간 실행은 그대로 제출할 수 없다. 공개 코드가 지원하는 Qwen3-VL-8B 로컬 victim 대체 실험은 원 논문 재현과 분리한다.
 - 공개 모델 조합 탐색에는 VLM·LLM·이미지 생성기 각 6개를 등록해 216개 행을 고정했다. 현재 접근 가능한 6×5×5=150개 조합에 대해서는 HADES·HIMRD의 `LLM → 이미지 생성 → 표적 VLM` 60,000개 호출과 HarmBench·Qwen3Guard 120,000개 자동 판정 작업을 H200 큐에 제출했다. 이 수치는 계획·진행량이며 완료 결과가 아니다.
 - Llama 3.3과 SD3.5 Large는 현재 계정에서 gated 403이므로 원 행을 삭제하지 않고 blocked로 보존한다. Qwen3-32B와 SD3 Medium을 실행 대체 후보로 분리해 표시한다. FigStep·MM-Plan처럼 원 기법에 이미지 생성 축이 없는 경우는 T2I 모델을 억지로 넣지 않고 `not_applicable`로 집계한다.
+- 접근 가능한 후보만으로 완주할 5×5×5 행렬은 `configs/open_best_combinations_executable125.jsonl`에 별도로 고정했다. 이는 원래 gated 후보를 포함한 주 125행렬과 다른 대체 실험이며, Qwen3-32B와 SD3 Medium 대체 사실을 결과표에 명시한다.
 - 이미지 생성을 포함하는 신규 파일럿과 전체 실험은 별도 experiment ID와 config를 사용한다.
 - 사람평가와 전체 호출이 끝나지 않았으므로 현재 부분 결과를 최종 결론이나 모델 순위로 간주하지 않는다.
 

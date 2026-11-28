@@ -204,6 +204,36 @@ combination_search:
     matrix_sha256: open_best_combinations_expanded.jsonl.sha256
     blocked_candidates_remain_rows: true
     executable_substitutions_are_reported_separately: true
+  executable_factorial_125:
+    vlm_count: 5
+    llm_count: 5
+    image_generator_count: 5
+    combinations: 125
+    purpose: execute_a_complete_5x5x5_matrix_when_primary_gated_candidates_are_unavailable
+    substitution_policy:
+      - meta-llama/Llama-3.3-70B-Instruct -> Qwen/Qwen3-32B
+      - stabilityai/stable-diffusion-3.5-large -> stabilityai/stable-diffusion-3-medium-diffusers
+    vlms:
+      - Qwen/Qwen3-VL-30B-A3B-Instruct
+      - OpenGVLab/InternVL3_5-38B-HF
+      - Qwen/Qwen3-VL-30B-A3B-Thinking
+      - mistralai/Mistral-Small-3.1-24B-Instruct-2503
+      - google/gemma-3-27b-it
+    llms:
+      - openai/gpt-oss-120b
+      - Qwen/Qwen3-30B-A3B-Instruct-2507
+      - mistralai/Mistral-Small-3.1-24B-Instruct-2503
+      - google/gemma-3-27b-it
+      - Qwen/Qwen3-32B
+    image_generators:
+      - Qwen/Qwen-Image-2512
+      - Qwen/Qwen-Image-2.1
+      - black-forest-labs/FLUX.1-dev
+      - PixArt-alpha/PixArt-Sigma-XL-2-1024-MS
+      - stabilityai/stable-diffusion-3-medium-diffusers
+    matrix: open_best_combinations_executable125.jsonl
+    matrix_sha256: open_best_combinations_executable125.jsonl.sha256
+    must_not_be_reported_as_the_original_primary_factorial: true
   search_stage:
     combinations: 125
     cases_per_method: 200
