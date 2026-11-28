@@ -17,7 +17,7 @@ if [[ -z "$PROJECT_ROOT" || ! -f "$PROJECT_ROOT/pyproject.toml" ]]; then
 fi
 PROJECT_ROOT=$(cd "$PROJECT_ROOT" && pwd)
 PYTHON_BIN=${PYTHON_BIN:-$PROJECT_ROOT/.venvs/modern/bin/python}
-export HF_HOME=${HF_HOME:-$PROJECT_ROOT/.cache/huggingface}
+export HF_HOME=${HF_HOME:-$HOME/.cache/huggingface}
 : "${REPO_ID:?REPO_ID is required}"
 : "${REVISION:?REVISION is required}"
 

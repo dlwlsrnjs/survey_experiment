@@ -3,6 +3,7 @@ set -euo pipefail
 
 PROJECT_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$PROJECT_ROOT"
+HF_CACHE_ROOT=${HF_HOME:-$HOME/.cache/huggingface}
 
 LLM_MODEL=huihui-ai/Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated
 LLM_REV=e2f73ec7e99ee316beb8069ca90e4c3cbef8aa0f
@@ -12,14 +13,14 @@ VLM_REV=936d030f188a041b9dd5b2c3ffe144c2453fcab6
 job_id() { awk '{print $NF}'; }
 
 DL_LLM=$(sbatch --job-name=align-dl-llm \
-  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",REPO_ID="$LLM_MODEL",REVISION="$LLM_REV" \
+  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",REPO_ID="$LLM_MODEL",REVISION="$LLM_REV" \
   slurm/download_open_best_candidate.sbatch | job_id)
 DL_VLM=$(sbatch --job-name=align-dl-vlm \
-  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",REPO_ID="$VLM_MODEL",REVISION="$VLM_REV" \
+  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",REPO_ID="$VLM_MODEL",REVISION="$VLM_REV" \
   slurm/download_open_best_candidate.sbatch | job_id)
 
 LLM_JOB=$(sbatch --dependency="afterok:$DL_LLM" --job-name=align-llm \
-  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",MODEL_ID="$LLM_MODEL",REVISION="$LLM_REV",RUN_TAG=qwen3_30ba3b_abliterated_20261128,SERVER_KIND=text \
+  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",MODEL_ID="$LLM_MODEL",REVISION="$LLM_REV",RUN_TAG=qwen3_30ba3b_abliterated_20261128,SERVER_KIND=text \
   slurm/run_open_best_llm_roles_h200.sbatch | job_id)
 
 declare -a IMAGE_JOBS=()
@@ -27,7 +28,7 @@ submit_image() {
   local job_name=$1 model=$2 revision=$3 tag=$4 python_bin=$5
   local submitted
   submitted=$(sbatch --dependency="afterok:$LLM_JOB" --job-name="$job_name" \
-    --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",PYTHON_BIN="$python_bin",MODEL_ID="$model",REVISION="$revision",RUN_TAG="$tag" \
+    --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",PYTHON_BIN="$python_bin",MODEL_ID="$model",REVISION="$revision",RUN_TAG="$tag" \
     slurm/run_alignment_ablation_images_h200.sbatch | job_id)
   IMAGE_JOBS+=("$submitted")
 }
@@ -40,19 +41,19 @@ submit_image align-img-sd3 stabilityai/stable-diffusion-3-medium-diffusers ea42f
 
 IMAGE_DEP=$(IFS=:; echo "${IMAGE_JOBS[*]}")
 VLM_ALIGNED=$(sbatch --dependency="afterok:$IMAGE_DEP" --job-name=align-vlm-base \
-  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",MODEL_ID=Qwen/Qwen3-VL-30B-A3B-Instruct,REVISION=9c4b90e1e4ba969fd3b5378b57d966d725f1b86c,RUN_TAG=aligned_qwen3vl30ba3b_20261128 \
+  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",MODEL_ID=Qwen/Qwen3-VL-30B-A3B-Instruct,REVISION=9c4b90e1e4ba969fd3b5378b57d966d725f1b86c,RUN_TAG=aligned_qwen3vl30ba3b_20261128 \
   slurm/run_alignment_ablation_vlm_h200.sbatch | job_id)
 VLM_ABLITERATED=$(sbatch --dependency="afterok:$IMAGE_DEP:$DL_VLM" --job-name=align-vlm-abl \
-  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",MODEL_ID="$VLM_MODEL",REVISION="$VLM_REV",RUN_TAG=abliterated_qwen3vl30ba3b_20261128 \
+  --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",MODEL_ID="$VLM_MODEL",REVISION="$VLM_REV",RUN_TAG=abliterated_qwen3vl30ba3b_20261128 \
   slurm/run_alignment_ablation_vlm_h200.sbatch | job_id)
 
 submit_judges() {
   local dependency=$1 tag=$2 prefix=$3
   sbatch --dependency="afterok:$dependency" --job-name="${prefix}-hb" \
-    --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",VLM_RUN_TAG="$tag",JUDGE_KIND=harmbench,JUDGE_MODEL=cais/HarmBench-Mistral-7b-val-cls,JUDGE_REVISION=51182c7cdaf9b2e5f05b745b81b047b67e7384a1 \
+    --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",VLM_RUN_TAG="$tag",JUDGE_KIND=harmbench,JUDGE_MODEL=cais/HarmBench-Mistral-7b-val-cls,JUDGE_REVISION=51182c7cdaf9b2e5f05b745b81b047b67e7384a1 \
     slurm/run_alignment_ablation_judge_h200.sbatch | job_id
   sbatch --dependency="afterok:$dependency" --job-name="${prefix}-qg" \
-    --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",VLM_RUN_TAG="$tag",JUDGE_KIND=qwen_guard,JUDGE_MODEL=Qwen/Qwen3Guard-Gen-8B,JUDGE_REVISION=4505cb1a6f1864f21f8b27f7daf1b9a1aab6edbb \
+    --export=ALL,PROJECT_ROOT="$PROJECT_ROOT",HF_HOME="$HF_CACHE_ROOT",VLM_RUN_TAG="$tag",JUDGE_KIND=qwen_guard,JUDGE_MODEL=Qwen/Qwen3Guard-Gen-8B,JUDGE_REVISION=4505cb1a6f1864f21f8b27f7daf1b9a1aab6edbb \
     slurm/run_alignment_ablation_judge_h200.sbatch | job_id
 }
 

@@ -250,6 +250,7 @@ python3 -m survey_exp.annotation \
 - HADES·HIMRD 각 200목표, 이미지 생성기 5개를 사용해 표적 호출 8,000건과 HarmBench·Qwen3Guard 판정 16,000건을 계획한다.
 - `scripts/submit_alignment_ablation.sh`가 모델 다운로드 → abliterated LLM 역할 산출물 → 5개 이미지 생성 → aligned/abliterated VLM → 두 judge의 dependency chain을 제출한다.
 - 2026-11-28 제출 ID는 모델 다운로드 `60336`–`60337`, abliterated LLM `60338`, 이미지 생성 `60339`–`60343`, aligned/abliterated VLM `60344`–`60345`, 두 judge `60346`–`60349`다. 제출 직후 다운로드 두 작업은 실행 중이고 나머지는 정상적으로 dependency 대기 중이었다.
+- 점검 중 최초 다운로드 `60336`–`60337`만 프로젝트 내부 `.cache/huggingface`를 사용하고 후속 H200 작업은 `$HF_HOME` 또는 사용자 HF cache를 사용하는 기본값 불일치를 확인했다. 약 9.2GB의 부분 다운로드는 삭제하지 않고 보존했으며, 두 작업을 취소한 뒤 공유 cache를 명시한 `60350`–`60351`로 재제출했다. `60338`과 `60345`의 dependency도 새 ID로 갱신했다. `slurm/download_open_best_candidate.sbatch`와 제출 스크립트는 이후 모든 단계에 동일한 `HF_HOME`을 전달한다.
 - 출력은 모두 `runs/alignment_ablation_*` 또는 `runs/open_best_qwen3_30ba3b_abliterated_20261128_llm_roles200` 아래 새 실험 ID를 사용한다. 기존 JSONL을 덮어쓰지 않는다.
 - 이 트랙은 일반 공개 모델 주 순위와 분리하며, 거부 감소를 곧바로 품질 또는 공격 성공 증가로 해석하지 않는다.
 
