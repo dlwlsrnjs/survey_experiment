@@ -26,6 +26,7 @@ export LOCAL_MODEL_API_KEY=${LOCAL_MODEL_API_KEY:-local}
 
 MODEL_ID=openai/gpt-oss-120b
 REVISION=b5c939de8f754692c1647ca79fbf85e8c1e70f8a
+RUN_TAG=${RUN_TAG:-gpt_oss120b_retry3_20261128}
 PORT=${PORT:-$((20000 + ${SLURM_JOB_ID:-0} % 30000))}
 JOB_TAG=${SLURM_JOB_ID:-local-$$}
 SERVER_DIR="$PROJECT_ROOT/runs/model-server-$JOB_TAG"
@@ -57,7 +58,7 @@ curl -fsS "http://127.0.0.1:${PORT}/v1/models" >/dev/null
 cd "$PROJECT_ROOT"
 "$PROJECT_ROOT/.venvs/modern/bin/python" -m survey_exp.source_fidelity_runner \
   --manifest data/manifests/himrd_safebench_full.jsonl \
-  --output-dir runs/open_best_gpt_oss120b_retry2_20261128_llm_roles200 \
+  --output-dir "runs/open_best_${RUN_TAG}_llm_roles200" \
   --repeats 1 --limit 200 --methods HADES HIMRD --no-image-generation \
   --base-url "http://127.0.0.1:${PORT}/v1" \
   --model "$MODEL_ID" --revision "$REVISION" \

@@ -259,3 +259,12 @@ python3 -m survey_exp.annotation \
 - Qwen-Image-2.1 retry2 `60313`은 실행 약 15분 시점에 `outputs.jsonl` 37행을 기록해 실제 생성이 진행 중이었다.
 - gpt-oss vLLM retry2 `60314`는 H200에서 서버 적재를 시작했고 `GptOssForCausalLM` 및 고정 revision을 확인했다. 아직 역할 출력 완료 상태는 아니다.
 - 확장 상한 후보 GLM-4.5V retry `60032`는 4×H200에서도 46개 shard 중 37번째 적재 이후 exit code 7로 실패했다. 이 후보는 실행 가능 대체 125행렬에 포함되지 않으므로 `60315`–`60334` 체인을 막지 않지만, 216개 확장 원장에서는 `load_failure`로 보존한다.
+
+### 2026-11-28 HF cache 정리와 gpt-oss retry3
+
+- 사용자 HF cache가 약 2.1TB까지 커져, `assets.lock.json`에 없는 과거 테스트 모델 26종과 현재 행렬에 쓰지 않는 GLM-4.5V, 품질 게이트 실패 Qwen3-VL-32B-Thinking, SDXL 전체 cache를 Hugging Face cache API로 삭제했다. 공식 API가 계산한 회수량은 928,962,713,973 bytes다.
+- 잘못된 프로젝트 내부 cache의 취소된 alignment 다운로드 약 15GB도 revision 단위로 제거했다. 실행 중 alignment 다운로드 `60350`–`60351`은 사용자 HF cache에 있어 영향을 받지 않는다.
+- 같은 revision 안의 실행 불필요 중복 형식인 gpt-oss `metal/`, `original/`과 Mistral `consolidated.safetensors`를 제거해 178,509,973,479 bytes를 추가 회수했다. gpt-oss 루트 MXFP4 shard와 Mistral Transformers shard/index는 보존했다.
+- 정리 후 사용자 HF cache는 약 1.1TB다. `runs/`, 이미지 artifact와 annotation은 삭제하지 않았다. 삭제한 가중치는 고정 revision에서 다시 받을 수 있다.
+- gpt-oss retry2 `60314`는 MXFP4 추론 자체는 시작해 12행을 남겼지만 OpenAI-compatible 응답 한 건의 `message.content=null`을 client가 문자열로 가정해 중단했다. 원시 12행은 보존하고, null content를 `InvalidResponseContent` 오류로 기록해 retry가 계속되도록 수정했다. retry3는 새 출력 ID를 사용해야 한다.
+- gpt-oss retry3는 `60352`, 새 출력은 `runs/open_best_gpt_oss120b_retry3_20261128_llm_roles200`이다. retry2 실패로 Slurm이 기존 downstream `60315`–`60334`를 자동 취소했으므로, 새 이미지 교차 `60353`–`60357`, VLM `60358`–`60362`, judge `60363`–`60372` 체인을 retry3에 연결해 다시 제출했다.

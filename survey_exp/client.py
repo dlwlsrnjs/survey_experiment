@@ -72,7 +72,21 @@ class OpenAICompatibleClient:
         try:
             with urllib.request.urlopen(request, timeout=self.config.timeout_seconds) as response:
                 raw = json.loads(response.read().decode("utf-8"))
-            text = raw["choices"][0]["message"]["content"]
+            text = raw["choices"][0]["message"].get("content")
+            if not isinstance(text, str):
+                return ModelResult(
+                    text="",
+                    parsed=None,
+                    usage=raw.get("usage", {}),
+                    latency_seconds=time.monotonic() - started,
+                    request_id=request_id,
+                    response_id=raw.get("id"),
+                    error={
+                        "type": "InvalidResponseContent",
+                        "message": f"Expected string content, received {type(text).__name__}",
+                    },
+                    raw=raw,
+                )
             try:
                 parsed = parse_json_object(text)
             except (json.JSONDecodeError, ValueError):
