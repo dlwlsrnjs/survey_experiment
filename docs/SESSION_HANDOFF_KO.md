@@ -249,5 +249,12 @@ python3 -m survey_exp.annotation \
 - LLM은 Qwen3-30B-A3B-Instruct-2507 원본/abliterated, VLM은 Qwen3-VL-30B-A3B-Instruct 원본/abliterated를 짝지었다. 두 community 파생 모델 revision은 `configs/assets.lock.json`에 고정했다.
 - HADES·HIMRD 각 200목표, 이미지 생성기 5개를 사용해 표적 호출 8,000건과 HarmBench·Qwen3Guard 판정 16,000건을 계획한다.
 - `scripts/submit_alignment_ablation.sh`가 모델 다운로드 → abliterated LLM 역할 산출물 → 5개 이미지 생성 → aligned/abliterated VLM → 두 judge의 dependency chain을 제출한다.
+- 2026-11-28 제출 ID는 모델 다운로드 `60336`–`60337`, abliterated LLM `60338`, 이미지 생성 `60339`–`60343`, aligned/abliterated VLM `60344`–`60345`, 두 judge `60346`–`60349`다. 제출 직후 다운로드 두 작업은 실행 중이고 나머지는 정상적으로 dependency 대기 중이었다.
 - 출력은 모두 `runs/alignment_ablation_*` 또는 `runs/open_best_qwen3_30ba3b_abliterated_20261128_llm_roles200` 아래 새 실험 ID를 사용한다. 기존 JSONL을 덮어쓰지 않는다.
 - 이 트랙은 일반 공개 모델 주 순위와 분리하며, 거부 감소를 곧바로 품질 또는 공격 성공 증가로 해석하지 않는다.
+
+### 같은 시점의 기존 큐 상태 보충
+
+- Qwen-Image-2.1 retry2 `60313`은 실행 약 15분 시점에 `outputs.jsonl` 37행을 기록해 실제 생성이 진행 중이었다.
+- gpt-oss vLLM retry2 `60314`는 H200에서 서버 적재를 시작했고 `GptOssForCausalLM` 및 고정 revision을 확인했다. 아직 역할 출력 완료 상태는 아니다.
+- 확장 상한 후보 GLM-4.5V retry `60032`는 4×H200에서도 46개 shard 중 37번째 적재 이후 exit code 7로 실패했다. 이 후보는 실행 가능 대체 125행렬에 포함되지 않으므로 `60315`–`60334` 체인을 막지 않지만, 216개 확장 원장에서는 `load_failure`로 보존한다.
