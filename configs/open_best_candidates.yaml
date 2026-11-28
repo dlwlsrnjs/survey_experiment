@@ -45,6 +45,15 @@ vlm_candidates:
     hf_repository_size_gib: 200.65
     roles: [visual_planning, multimodal_target, visual_evaluation]
     multi_gpu_upper_bound: true
+  - repo_id: huihui-ai/Huihui-Qwen3-VL-30B-A3B-Instruct-abliterated
+    revision: 936d030f188a041b9dd5b2c3ffe144c2453fcab6
+    license: apache-2.0
+    hf_repository_size_gib: 57.87
+    base_model: Qwen/Qwen3-VL-30B-A3B-Instruct
+    derivation: community_abliteration
+    alignment_status: abliterated
+    roles: [visual_planning, multimodal_target, visual_evaluation]
+    ablation_only: true
 
 llm_candidates:
   - repo_id: openai/gpt-oss-120b
@@ -82,6 +91,15 @@ llm_candidates:
     hf_repository_size_gib: 61.04
     roles: [generation, rewrite, evaluation, experience_use]
     executable_fallback_for: meta-llama/Llama-3.3-70B-Instruct
+  - repo_id: huihui-ai/Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated
+    revision: e2f73ec7e99ee316beb8069ca90e4c3cbef8aa0f
+    license: apache-2.0
+    hf_repository_size_gib: 56.88
+    base_model: Qwen/Qwen3-30B-A3B-Instruct-2507
+    derivation: community_abliteration
+    alignment_status: abliterated
+    roles: [generation, rewrite, evaluation, experience_use]
+    ablation_only: true
 
 image_generator_candidates:
   - repo_id: Qwen/Qwen-Image-2512
@@ -234,6 +252,32 @@ combination_search:
     matrix: open_best_combinations_executable125.jsonl
     matrix_sha256: open_best_combinations_executable125.jsonl.sha256
     must_not_be_reported_as_the_original_primary_factorial: true
+  alignment_ablation_factorial:
+    purpose: isolate_refusal_alignment_effect_from_base_family_capability
+    vlm_count: 2
+    llm_count: 2
+    image_generator_count: 5
+    combinations: 20
+    vlms:
+      - Qwen/Qwen3-VL-30B-A3B-Instruct
+      - huihui-ai/Huihui-Qwen3-VL-30B-A3B-Instruct-abliterated
+    llms:
+      - Qwen/Qwen3-30B-A3B-Instruct-2507
+      - huihui-ai/Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated
+    image_generators:
+      - Qwen/Qwen-Image-2512
+      - Qwen/Qwen-Image-2.1
+      - black-forest-labs/FLUX.1-dev
+      - PixArt-alpha/PixArt-Sigma-XL-2-1024-MS
+      - stabilityai/stable-diffusion-3-medium-diffusers
+    matrix: alignment_ablation_combinations.jsonl
+    matrix_sha256: alignment_ablation_combinations.jsonl.sha256
+    methods: [HADES, HIMRD]
+    cases_per_method: 200
+    target_calls: 8000
+    judges: [HarmBench-Mistral-7b-val-cls, Qwen3Guard-Gen-8B]
+    automatic_judgements: 16000
+    separate_from_primary_ranking: true
   search_stage:
     combinations: 125
     cases_per_method: 200

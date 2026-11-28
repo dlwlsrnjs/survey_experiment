@@ -60,6 +60,8 @@
     {"repo_id": "zai-org/GLM-4.5V", "revision": "ed47433b37111465ec527affaaddceff371bca04", "role": "open_best:vlm_multi_gpu_upper_bound", "profiles": ["open_best"]},
     {"repo_id": "openai/gpt-oss-120b", "revision": "b5c939de8f754692c1647ca79fbf85e8c1e70f8a", "role": "open_best:llm", "profiles": ["open_best"]},
     {"repo_id": "Qwen/Qwen3-30B-A3B-Instruct-2507", "revision": "0d7cf23991f47feeb3a57ecb4c9cee8ea4a17bfe", "role": "open_best:llm", "profiles": ["open_best"]},
+    {"repo_id": "huihui-ai/Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated", "revision": "e2f73ec7e99ee316beb8069ca90e4c3cbef8aa0f", "role": "alignment_ablation:llm:community_abliterated", "profiles": ["open_best", "alignment_ablation"]},
+    {"repo_id": "huihui-ai/Huihui-Qwen3-VL-30B-A3B-Instruct-abliterated", "revision": "936d030f188a041b9dd5b2c3ffe144c2453fcab6", "role": "alignment_ablation:vlm:community_abliterated", "profiles": ["open_best", "alignment_ablation"]},
     {"repo_id": "meta-llama/Llama-3.3-70B-Instruct", "revision": "6f6073b423013f6a7d4d9f39144961bfbfbc386b", "role": "open_best:llm:gated", "profiles": ["open_best"]},
     {"repo_id": "Qwen/Qwen3-32B", "revision": "9216db5781bf21249d130ec9da846c4624c16137", "role": "open_best:llm:executable_fallback", "profiles": ["open_best"]},
     {"repo_id": "Qwen/Qwen-Image-2512", "revision": "25468b98e3276ca6700de15c6628e51b7de54a26", "role": "open_best:image_generator:apache2", "profiles": ["open_best"]},

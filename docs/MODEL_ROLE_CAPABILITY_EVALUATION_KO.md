@@ -61,6 +61,18 @@
 
 모델급별 거부 경계는 한 사례의 최초 거부 지점으로 정하지 않는다. 역할·목표별 짝지어진 표본에서 의도 노출 수준에 따른 거부율과 usable yield의 변화, 95% 신뢰구간을 함께 보고한다. 필요하면 `model × role × visibility` 상호작용을 포함한 mixed-effects logistic model을 보조 분석으로 사용한다.
 
+### 안전정렬 제거 체크포인트를 이용한 추가 ablation
+
+의도 노출 실험과 별도로, 같은 기반 모델의 정렬 원본과 community abliterated 파생 체크포인트를 짝지어 실행한다. 이 비교의 목적은 “거부가 줄어드는가”만 확인하는 것이 아니라, 거부 감소와 형식·내용 품질 및 downstream 사용 가능성이 함께 변하는지 분리하는 것이다.
+
+- LLM 쌍: `Qwen/Qwen3-30B-A3B-Instruct-2507`과 `huihui-ai/Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated`
+- VLM 쌍: `Qwen/Qwen3-VL-30B-A3B-Instruct`와 `huihui-ai/Huihui-Qwen3-VL-30B-A3B-Instruct-abliterated`
+- 교차 조건: LLM 2 × VLM 2 × 이미지 생성기 5 = 20
+- 고정 데이터: HADES와 HIMRD 각각 같은 200목표
+- 고정 판정: HarmBench와 Qwen3Guard 및 후속 블라인드 사람평가
+
+`abliterated`는 제3자가 가중치에 수행한 개입이다. 원본과 파생 모델의 차이를 전부 안전정렬 하나의 인과효과로 단정하지 않는다. 파생 과정에서 일반 능력, calibration과 출력 분포도 바뀔 수 있으므로 거부율, API/추론 오류, 형식 유효율, 비거부 조건부 품질, usable yield와 사람평가를 함께 보고한다. 이 트랙은 일반적으로 배포되는 공개 모델의 주 순위와 분리한다.
+
 ## 4. 점수를 해석하는 공통 원칙
 
 거부가 많은 모델의 비거부 사례만 평균내면 성능이 과대평가될 수 있다. 따라서 모든 역할은 최소 세 개의 분모를 함께 보고한다.

@@ -53,6 +53,22 @@ class OpenBestProtocolTests(unittest.TestCase):
         self.assertIn("Qwen3-32B", serialized)
         self.assertIn("stable-diffusion-3-medium-diffusers", serialized)
 
+    def test_alignment_ablation_is_paired_and_has_twenty_combinations(self):
+        config = ROOT / "configs/open_best_candidates.yaml"
+        payload, rows = build(config, "alignment_ablation_factorial")
+        self.assertEqual(len(rows), 20)
+        self.assertEqual(payload, (ROOT / "configs/alignment_ablation_combinations.jsonl").read_bytes())
+        statuses = {
+            (row["alignment_status"]["llm"], row["alignment_status"]["vlm"])
+            for row in rows
+        }
+        self.assertEqual(statuses, {
+            ("aligned", "aligned"),
+            ("aligned", "abliterated"),
+            ("abliterated", "aligned"),
+            ("abliterated", "abliterated"),
+        })
+
     def test_every_combination_has_two_hundred_cases_per_method(self):
         protocol = yaml.safe_load((ROOT / "configs/open_best_protocol.yaml").read_text())
         self.assertEqual(protocol["benchmark"]["groups_per_method"], 200)
@@ -72,8 +88,8 @@ class OpenBestProtocolTests(unittest.TestCase):
 
     def test_download_array_covers_every_open_best_asset(self):
         selected = assets(ROOT / "configs/assets.lock.json")
-        self.assertEqual(len(selected), 18)
-        self.assertEqual(len({(item["repo_id"], item["revision"]) for item in selected}), 18)
+        self.assertEqual(len(selected), 20)
+        self.assertEqual(len({(item["repo_id"], item["revision"]) for item in selected}), 20)
 
 
 if __name__ == "__main__":

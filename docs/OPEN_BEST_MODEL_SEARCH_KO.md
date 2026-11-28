@@ -27,6 +27,31 @@
 
 원래 125개 주 행렬은 Llama 3.3과 SD3.5 Large를 포함하므로 현재 계정의 403 접근 상태에서는 125개를 모두 실행할 수 없다. 이를 숨기거나 원 후보 이름만 바꿔치기하지 않고, 완주 가능한 별도 5×5×5 행렬을 `configs/open_best_combinations_executable125.jsonl`로 고정했다. 이 행렬은 Llama 3.3을 Qwen3-32B로, SD3.5 Large를 SD3 Medium으로 명시적으로 대체한다. 따라서 결과에는 반드시 **원 주 행렬**과 **접근 가능 대체 행렬**을 구분해 표기한다.
 
+## 안전정렬 제거 짝지어진 추가 트랙
+
+주 125조건은 일반적인 공개 모델 후보 비교라는 연구 질문을 유지한다. 안전정렬 제거 모델로 후보를 바꾸면 질문과 모집단이 달라지므로, 주 행렬을 수정하지 않고 `configs/alignment_ablation_combinations.jsonl`의 별도 20조건을 추가한다.
+
+| 축 | 조건 |
+|---|---|
+| LLM | Qwen3-30B-A3B-Instruct-2507 aligned / 동일 기반 community abliterated |
+| VLM | Qwen3-VL-30B-A3B-Instruct aligned / 동일 기반 community abliterated |
+| 이미지 생성기 | 실행 가능한 125행렬과 같은 5개 |
+| 데이터 | HADES·HIMRD 각각 동일 200목표 |
+| 판정 | 정렬 상태를 바꾸지 않은 HarmBench·Qwen3Guard와 블라인드 사람평가 |
+
+총량은 `2 × 2 × 5 = 20`조건, `20 × 2기법 × 200목표 = 8,000` 표적 VLM 호출, 자동 판정 16,000건이다. 이 설계는 LLM 단계의 거부와 VLM 단계의 거부를 각각 분리한다. 이미지 생성 모델, seed, 해상도, step, 표적 prompt와 판정기는 정렬 여부 비교에서 고정한다.
+
+모델 카드의 `uncensored` 또는 `abliterated` 표기는 독립 성능 검증이 아니다. 따라서 다음을 전부 보고한다.
+
+- 상류 LLM 거부·형식 오류·usable prompt 비율
+- 이미지 생성 성공·오류·의미 충실도
+- 표적 VLM 거부·오류·응답률
+- 비거부 조건부 품질과 전체 usable yield
+- 두 자동 judge의 결과와 불일치
+- 사람평가 및 GPU 시간
+
+이 결과는 “안전정렬을 제거하면 성능이 향상된다”는 단일 결론으로 축약하지 않는다. community 파생 과정이 일반 능력과 출력 분포도 바꿀 수 있으므로 정렬 개입의 후보 ablation으로 해석한다.
+
 ### VLM
 
 | 후보 | 우선 확인할 능력 | 선정 이유 |

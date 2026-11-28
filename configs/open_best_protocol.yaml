@@ -61,4 +61,21 @@ combination_search:
     full_five_method_ranking:
       status: blocked_until_all_fixed_200_case_pools_exist
       blockers: [MM-Plan_DUA_403, MemJack_original_image_paths_and_local_victim_contract]
+  alignment_ablation:
+    scope: paired_add_on_not_primary_open_model_ranking
+    matrix: alignment_ablation_combinations.jsonl
+    llm_alignment_levels: [aligned, abliterated]
+    vlm_alignment_levels: [aligned, abliterated]
+    image_generators: 5
+    combinations: 20
+    methods: [HADES, HIMRD]
+    groups_per_method: 200
+    planned_target_calls: 8000
+    planned_automatic_judgements: 16000
+    fixed_judges: [cais/HarmBench-Mistral-7b-val-cls, Qwen/Qwen3Guard-Gen-8B]
+    interpretation_rule: >-
+      Treat the community abliterated checkpoints as an alignment intervention candidate,
+      not as proof that every difference is caused only by safety alignment. Report
+      refusals, format validity, conditional quality, usable yield, errors, and human
+      review separately.
 

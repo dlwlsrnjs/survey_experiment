@@ -53,7 +53,17 @@ def build(config_path: Path, factorial_key: str = "primary_factorial") -> tuple[
         combination_id = "ob-" + _sha256_bytes(
             json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
         )[:12]
-        rows.append({"combination_id": combination_id, **identity})
+        row = {"combination_id": combination_id, **identity}
+        if factorial_key == "alignment_ablation_factorial":
+            row["alignment_status"] = {
+                "vlm": "abliterated" if vlm.get("alignment_status") == "abliterated" else "aligned",
+                "llm": "abliterated" if llm.get("alignment_status") == "abliterated" else "aligned",
+            }
+            row["paired_base_family"] = {
+                "vlm": vlm.get("base_model", vlm["repo_id"]),
+                "llm": llm.get("base_model", llm["repo_id"]),
+            }
+        rows.append(row)
     if len(rows) != int(factorial["combinations"]):
         raise ValueError(f"Generated {len(rows)} combinations, expected {factorial['combinations']}")
     payload = b"".join(

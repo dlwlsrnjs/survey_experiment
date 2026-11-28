@@ -242,3 +242,12 @@ python3 -m survey_exp.annotation \
 - gated 403인 Llama 3.3·SD3.5 Large를 Qwen3-32B·SD3 Medium으로 명시적으로 대체한 완주 가능 125행을 `configs/open_best_combinations_executable125.jsonl`에 고정했다. SHA-256은 `3cbb50754c32af5628b729962956a1dd86288b42175f1c07df4737fdc7f81ff6`이다. 원래 125행렬 결과로 표현하면 안 된다.
 - 새 이미지 교차 작업은 `60315`–`60319`, 5개 표적 VLM 작업은 `60320`–`60324`, 두 judge의 10개 작업은 `60325`–`60334`다. 이 체인은 5×5×5=125개 조합, HADES·HIMRD 각 200목표의 50,000개 표적 호출과 100,000개 자동 판정을 계획한다.
 - 이 작업들은 제출 완료 상태일 뿐 결과 완료 상태가 아니다. `60313`과 `60314`의 smoke·완료를 먼저 확인하고, downstream 완료는 각 `completed.json`과 원시 행 수로 판정한다.
+
+### 안전정렬 제거 짝지어진 추가 트랙
+
+- 기존 125조건은 보존하고 `configs/alignment_ablation_combinations.jsonl`에 별도 20조건을 고정했다.
+- LLM은 Qwen3-30B-A3B-Instruct-2507 원본/abliterated, VLM은 Qwen3-VL-30B-A3B-Instruct 원본/abliterated를 짝지었다. 두 community 파생 모델 revision은 `configs/assets.lock.json`에 고정했다.
+- HADES·HIMRD 각 200목표, 이미지 생성기 5개를 사용해 표적 호출 8,000건과 HarmBench·Qwen3Guard 판정 16,000건을 계획한다.
+- `scripts/submit_alignment_ablation.sh`가 모델 다운로드 → abliterated LLM 역할 산출물 → 5개 이미지 생성 → aligned/abliterated VLM → 두 judge의 dependency chain을 제출한다.
+- 출력은 모두 `runs/alignment_ablation_*` 또는 `runs/open_best_qwen3_30ba3b_abliterated_20261128_llm_roles200` 아래 새 실험 ID를 사용한다. 기존 JSONL을 덮어쓰지 않는다.
+- 이 트랙은 일반 공개 모델 주 순위와 분리하며, 거부 감소를 곧바로 품질 또는 공격 성공 증가로 해석하지 않는다.
